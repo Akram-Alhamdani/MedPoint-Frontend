@@ -73,6 +73,7 @@ export function LoginForm() {
                 <Link
                   to="/doctor/forgot-password"
                   className="text-sm underline-offset-4 hover:underline"
+                  tabIndex={-1}
                 >
                   Forgot your Password?
                 </Link>
