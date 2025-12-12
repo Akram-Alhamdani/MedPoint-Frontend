@@ -7,6 +7,7 @@ import {
 } from "@/features/auth/pages";
 import DashboardLayout from "@/features/dashboard/layouts/DashboardLayout";
 import { DashboardPage } from "@/features/dashboard/pages";
+import { PrivateRoute } from "@/shared/components/PrivateRoute";
 
 export const router = createBrowserRouter([
   {
@@ -31,7 +32,11 @@ export const router = createBrowserRouter([
   },
   {
     path: "/doctor/dashboard",
-    element: <DashboardLayout />,
+    element: (
+      <PrivateRoute>
+        <DashboardLayout />
+      </PrivateRoute>
+    ),
     children: [
       { index: true, element: <DashboardPage /> },
       { path: "appointments", element: <div>Appointments Page</div> },

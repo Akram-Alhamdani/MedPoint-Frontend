@@ -11,7 +11,7 @@ interface PrivateRouteProps {
 
 export function PrivateRoute({
   children,
-  redirectTo = "/login",
+  redirectTo = "/doctor/login",
 }: PrivateRouteProps) {
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
 
