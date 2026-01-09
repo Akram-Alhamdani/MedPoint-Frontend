@@ -1,5 +1,5 @@
 import axios, { type InternalAxiosRequestConfig } from "axios";
-import { jwtDecode } from "jwt-decode";
+import { refreshAccessToken, isTokenValid } from "@/features/auth/services";
 
 declare module "axios" {
   export interface AxiosRequestConfig {
@@ -15,31 +15,31 @@ const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
 });
 
-api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  const cfg = config;
+api.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
+  if (config.skipAuth) return config;
 
-  if (cfg.skipAuth) return cfg;
+  let token = localStorage.getItem("accessToken");
+  const refresh = localStorage.getItem("refreshToken");
 
-  const token = localStorage.getItem("accessToken");
-
-  if (token && cfg.headers) {
+  // Token expired? try refreshing
+  if (!isTokenValid(token) && refresh) {
     try {
-      const decoded: { exp?: number } = jwtDecode(token);
-      const now = Date.now() / 1000;
-
-      if (decoded?.exp && decoded.exp > now) {
-        cfg.headers.Authorization = `Bearer ${token}`;
-      } else {
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-      }
+      token = await refreshAccessToken();
+      localStorage.setItem("accessToken", token);
     } catch {
+      localStorage.removeItem("user");
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
+
+      window.location.href = "/doctor/login";
     }
   }
 
-  return cfg;
+  if (token && config.headers) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
 });
 
 export default api;

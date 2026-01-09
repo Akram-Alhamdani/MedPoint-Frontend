@@ -1,6 +1,4 @@
-import { useAppDispatch } from "@/store/hooks";
 import { useMutation } from "@tanstack/react-query";
-import { setAuth } from "../slice";
 import { toast } from "sonner";
 import { loginAPI } from "../services/api";
 import type { LoginPayload, LoginResponse } from "../types";
@@ -9,8 +7,6 @@ import type { LoginPayload, LoginResponse } from "../types";
 /* LOGIN                              */
 /* ---------------------------------- */
 export const useLogin = () => {
-  const dispatch = useAppDispatch();
-
   return useMutation<LoginResponse, Error, LoginPayload>({
     mutationFn: async ({ email, password }) => {
       try {
@@ -18,7 +14,7 @@ export const useLogin = () => {
 
         const { access, refresh, user } = response.data;
 
-        if (user.role !== "D") {
+        if (user.role !== "P") {
           throw new Error("Only doctors are allowed");
         }
 
@@ -29,14 +25,7 @@ export const useLogin = () => {
     },
 
     onSuccess: ({ access, refresh, user }) => {
-      dispatch(
-        setAuth({
-          accessToken: access,
-          refreshToken: refresh,
-          user,
-        })
-      );
-
+      localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("accessToken", access);
       localStorage.setItem("refreshToken", refresh);
 
