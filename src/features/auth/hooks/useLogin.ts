@@ -14,7 +14,7 @@ export const useLogin = () => {
 
         const { access, refresh, user } = response.data;
 
-        if (user.role !== "P") {
+        if (user.role !== "D") {
           throw new Error("Only doctors are allowed");
         }
 
