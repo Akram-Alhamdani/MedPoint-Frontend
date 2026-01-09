@@ -17,7 +17,6 @@ export const useRegister = () => {
 
         if (data?.email) throw new Error(data?.email);
         else if (data?.password) throw new Error(data?.password);
-        else if (data?.detail) throw new Error(data?.detail);
         else throw new Error("Registration failed. Please try again.");
       }
     },

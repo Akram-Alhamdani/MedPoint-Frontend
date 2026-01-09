@@ -24,7 +24,7 @@ export const useLogin = () => {
 
         return { access, refresh, user };
       } catch (error: any) {
-        throw new Error(error.message || "Login failed");
+        throw new Error("Invalid email or password");
       }
     },
 

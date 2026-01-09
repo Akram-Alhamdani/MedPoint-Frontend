@@ -9,20 +9,24 @@ import type {
 
 // Login API
 export const loginAPI = (payload: LoginPayload) =>
-  api.post<LoginResponse>("/auth/token/", payload);
+  api.post<LoginResponse>("/auth/token/", payload, { skipAuth: true });
 
 // Register API
 export const registerAPI = (payload: RegisterPayload) =>
-  api.post("/auth/register/", { ...payload, role: "D" });
+  api.post("/auth/register/", { ...payload, role: "D" }, { skipAuth: true });
 
 // Refresh token API
 export const refreshTokenAPI = (refresh: string) =>
-  api.post<LoginResponse>("/auth/token/refresh/", { refresh });
+  api.post<LoginResponse>(
+    "/auth/token/refresh/",
+    { refresh },
+    { skipAuth: true }
+  );
 
 // Forgot Password API
 export const forgotPasswordAPI = (payload: ForgotPasswordPayload) =>
-  api.post("/auth/password/reset/", payload);
+  api.post("/auth/password/reset/", payload, { skipAuth: true });
 
 // Reset Password Confirm API
 export const resetPasswordConfirmAPI = (payload: ResetPasswordConfirmPayload) =>
-  api.post("/auth/password/reset/confirm/", payload);
+  api.post("/auth/password/reset/confirm/", payload, { skipAuth: true });
