@@ -2,8 +2,11 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { resetPasswordConfirmAPI } from "../services/api";
 import type { ResetPasswordConfirmPayload } from "../types";
+import { useNavigate } from "react-router-dom";
 
 export const useResetPasswordConfirm = () => {
+  const navigate = useNavigate();
+
   return useMutation<any, Error, ResetPasswordConfirmPayload>({
     mutationFn: async (payload) => {
       try {
@@ -17,7 +20,8 @@ export const useResetPasswordConfirm = () => {
     },
 
     onSuccess: () => {
-      toast.success("Password reset successfully! You can now log in.");
+      toast.success("Password was reset successfully!");
+      navigate("/doctor/login");
     },
 
     onError: (error) => {

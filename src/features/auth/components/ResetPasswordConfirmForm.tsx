@@ -17,13 +17,17 @@ import { Spinner } from "@/shared/components/ui/spinner";
 import { Eye, EyeOff } from "lucide-react";
 
 import { useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useResetPasswordConfirm } from "../hooks/useResetPasswordConfirm";
 import { toast } from "sonner";
 
-export function ResetPasswordConfirmForm() {
-  const { uid, token } = useParams();
-  const navigate = useNavigate();
+export function ResetPasswordConfirmForm({
+  email,
+  token,
+}: {
+  email: string;
+  token: string;
+}) {
   const resetPassword = useResetPasswordConfirm();
 
   const [password, setPassword] = useState("");
@@ -33,11 +37,6 @@ export function ResetPasswordConfirmForm() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (!uid || !token) {
-      toast.error("Invalid or expired reset link");
-      return;
-    }
 
     const complexityRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/;
@@ -58,18 +57,11 @@ export function ResetPasswordConfirmForm() {
       return;
     }
 
-    resetPassword.mutate(
-      {
-        uid,
-        token,
-        new_password: password,
-      },
-      {
-        onSuccess: () => {
-          setTimeout(() => navigate("/doctor/login"), 2000);
-        },
-      }
-    );
+    resetPassword.mutate({
+      email: email,
+      token: token,
+      new_password: password,
+    });
   };
 
   return (

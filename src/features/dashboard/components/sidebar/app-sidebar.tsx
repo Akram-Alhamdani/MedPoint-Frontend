@@ -19,7 +19,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/shared/components/ui/sidebar";
-import { useAppSelector } from "@/store/hooks";
 
 const data = {
   user: {
@@ -54,13 +53,9 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const user = useAppSelector((state) => state.auth.user) || {
-    full_name: "Known User",
-    email: "user@example.com",
-    image: "",
-  };
-  const nameParts = user!.full_name.split(" ");
-  const userName = `${nameParts[0]} ${nameParts[nameParts.length - 1]}`;
+  const user = localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user") || "")
+    : null;
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -84,15 +79,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSecondary items={data.navSecondary} className="mt-auto " />
       </SidebarContent>
       <SidebarFooter>
-        <div className="shadow-lg rounded-md">
-          <NavUser
-            user={{
-              name: userName,
-              email: user!.email,
-              avatar: user!.image || "/default-avatar.png",
-            }}
-          />
-        </div>
+        {user ? (
+          <div className="shadow-lg rounded-md">
+            <NavUser
+              user={{
+                name: user!.full_name,
+                email: user!.email,
+                avatar: user!.image || "/default-avatar.png",
+              }}
+            />
+          </div>
+        ) : null}
       </SidebarFooter>
     </Sidebar>
   );

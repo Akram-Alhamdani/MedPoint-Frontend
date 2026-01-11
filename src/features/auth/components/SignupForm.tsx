@@ -13,14 +13,18 @@ import {
   FieldLabel,
 } from "@/shared/components/ui/field";
 import { Input } from "@/shared/components/ui/input";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useRegister } from "../hooks/useRegister"; // your custom hook
 import { toast } from "sonner";
 import { Spinner } from "@/shared/components/ui/spinner";
 
-export function SignupForm() {
+export function SignupForm({
+  onSuccess,
+}: {
+  onSuccess: (email: string) => void;
+}) {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,7 +32,6 @@ export function SignupForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const navigate = useNavigate();
   const register = useRegister();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -57,7 +60,7 @@ export function SignupForm() {
       { full_name: fullName, email, password, password2: confirmPassword },
       {
         onSuccess: () => {
-          navigate("/doctor/login");
+          onSuccess(email);
         },
       }
     );

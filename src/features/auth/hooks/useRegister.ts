@@ -14,15 +14,11 @@ export const useRegister = () => {
         return response.data;
       } catch (error: any) {
         const data = error.response?.data;
-
         if (data?.email) throw new Error(data?.email);
         else if (data?.password) throw new Error(data?.password);
+        else if (data?.message) throw new Error(data?.message);
         else throw new Error("Registration failed. Please try again.");
       }
-    },
-
-    onSuccess: () => {
-      toast.success("Registered successfully");
     },
 
     onError: (error: any) => {

@@ -32,13 +32,12 @@ export interface JWTToken {
   user_id: string;
 }
 
-export interface ForgotPasswordPayload {
-  email: string;
-  domain: string;
-}
-
 export interface ResetPasswordConfirmPayload {
-  uid: string;
+  email: string;
   token: string;
   new_password: string;
+}
+export interface VerifyOTPPayload {
+  email: string;
+  otp: string;
 }

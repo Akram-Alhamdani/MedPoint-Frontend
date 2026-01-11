@@ -3,7 +3,6 @@ import type {
   LoginPayload,
   LoginResponse,
   RegisterPayload,
-  ForgotPasswordPayload,
   ResetPasswordConfirmPayload,
 } from "../types";
 
@@ -24,9 +23,21 @@ export const refreshTokenAPI = (refresh: string) =>
   );
 
 // Forgot Password API
-export const forgotPasswordAPI = (payload: ForgotPasswordPayload) =>
-  api.post("/auth/password/reset/", payload, { skipAuth: true });
+export const forgotPasswordAPI = (email: string) =>
+  api.post("/auth/password/reset/", { email }, { skipAuth: true });
 
 // Reset Password Confirm API
 export const resetPasswordConfirmAPI = (payload: ResetPasswordConfirmPayload) =>
   api.post("/auth/password/reset/confirm/", payload, { skipAuth: true });
+
+// Verify Email Verification OTP API
+export const verifyEmailOTPAPI = (email: string, otp: string) =>
+  api.post("/auth/verify-email/", { email, otp }, { skipAuth: true });
+
+// Resend Email Verification OTP API
+export const resendEmailOTPAPI = (email: string) =>
+  api.post("/auth/verify-email/resend/", { email }, { skipAuth: true });
+
+// Verify Password Reset OTP API
+export const verifyPasswordResetOTPAPI = (email: string, otp: string) =>
+  api.post("/auth/password/reset/verify/", { email, otp }, { skipAuth: true });

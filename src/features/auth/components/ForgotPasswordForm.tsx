@@ -19,7 +19,11 @@ import { useForgotPassword } from "../hooks/useForgotPassword";
 import { Spinner } from "@/shared/components/ui/spinner";
 import { Link } from "react-router-dom";
 
-export function ForgotPasswordForm() {
+export function ForgotPasswordForm({
+  onSuccess,
+}: {
+  onSuccess: (email: string) => void;
+}) {
   const [email, setEmail] = useState("");
 
   const forgotPassword = useForgotPassword();
@@ -27,9 +31,10 @@ export function ForgotPasswordForm() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    forgotPassword.mutate({
-      email: email,
-      domain: window.location.origin,
+    forgotPassword.mutate(email, {
+      onSuccess: () => {
+        onSuccess(email);
+      },
     });
   };
 
