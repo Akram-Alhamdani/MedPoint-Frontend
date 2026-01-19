@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getDashboardData } from "../services/api";
+import { getDashboardData } from "../api";
 import type { DashboardData } from "../types";
 import { toast } from "sonner";
 
