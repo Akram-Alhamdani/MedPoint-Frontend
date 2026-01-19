@@ -4,11 +4,9 @@ import {
   IconDashboard,
   IconInnerShadowTop,
   IconListDetails,
-  IconSettings,
 } from "@tabler/icons-react";
 
 import { NavMain } from "./nav-main";
-import { NavSecondary } from "./nav-secondary";
 import { NavUser } from "./nav-user";
 import {
   Sidebar,
@@ -48,14 +46,28 @@ const data = {
       icon: IconChartBar,
     },
   ],
-  navSecondary: [
-    {
-      title: "Settings",
-      url: "/doctor/dashboard/settings",
-      icon: IconSettings,
-    },
-  ],
 };
+
+// Helper to resolve image URL (copied from ProfilePage)
+function resolveImageUrl(image: string | null): string | null {
+  if (!image) return null;
+  if (image.startsWith("blob:")) return image;
+  if (image.startsWith("http://") || image.startsWith("https://")) return image;
+  const apiBase = import.meta.env.VITE_API_BASE_URL || "";
+  const rootBase = apiBase.replace(/\/api\/?$/, "");
+  // Normalize leading slash for media/static
+  const normalized = image.replace(/^\//, "");
+  if (normalized.startsWith("media/") || normalized.startsWith("static/")) {
+    return `${rootBase}/${normalized}`;
+  }
+  // If image starts with /api/media/ or /api/static/, use API base URL
+  if (image.startsWith("/api/media/") || image.startsWith("/api/static/")) {
+    return `${apiBase.replace(/\/$/, "")}${image}`;
+  }
+  // Otherwise, fallback to previous logic
+  const base = apiBase.replace(/\/$/, "");
+  return base && image ? `${base}/${image.replace(/^\//, "")}` : image;
+}
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const user = localStorage.getItem("user")
@@ -81,16 +93,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavSecondary items={data.navSecondary} className="mt-auto " />
       </SidebarContent>
       <SidebarFooter>
         {user ? (
           <div className="shadow-lg rounded-md">
+            {/* Use the same image resolver as profile page for consistency */}
             <NavUser
               user={{
                 name: user!.full_name,
                 email: user!.email,
-                avatar: user!.image || "/default-avatar.png",
+                avatar: resolveImageUrl
+                  ? resolveImageUrl(user!.image)
+                  : user!.image || "/default-avatar.png",
               }}
             />
           </div>

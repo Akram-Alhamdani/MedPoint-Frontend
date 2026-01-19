@@ -12,6 +12,7 @@ export function SiteHeader() {
     if (pathname.endsWith("/doctor/dashboard")) return "Dashboard";
     if (pathname.endsWith("/doctor/dashboard/appointments"))
       return "Appointments";
+    if (pathname.endsWith("/doctor/dashboard/profile")) return "Profile";
     if (pathname.endsWith("/doctor/dashboard/schedule")) return "Schedule";
     if (pathname.endsWith("/doctor/dashboard/settings")) return "Settings";
     if (pathname.endsWith("/doctor/dashboard/working-hours"))
