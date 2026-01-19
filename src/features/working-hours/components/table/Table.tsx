@@ -1,0 +1,194 @@
+import { useMemo, useState } from "react";
+import {
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+  type ColumnDef,
+  type Table as TableInstance,
+} from "@tanstack/react-table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/shared/components/ui/table";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenuCheckboxItem,
+  DropdownMenuItem,
+} from "@/shared/components/ui/dropdown-menu";
+import {
+  IconLayoutColumns,
+  IconChevronDown,
+  IconTrash,
+  IconPlus,
+} from "@tabler/icons-react";
+
+import { Button } from "@/shared/components/ui/button";
+import type { WorkingHour } from "../../types";
+import buildColumns from "./Columns";
+
+const WorkingHoursTable = ({
+  data,
+  onCreateClick,
+  onEditClick,
+  onDeleteRequest,
+}: {
+  data: WorkingHour[];
+  onCreateClick?: () => void;
+  onEditClick?: (workingHour: WorkingHour) => void;
+  onDeleteRequest?: (ids: number[]) => void;
+}) => {
+  const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
+  const selectionCount = Object.values(rowSelection).filter(Boolean).length;
+  const disableRowActions: boolean = selectionCount > 1;
+
+  const columns: ColumnDef<WorkingHour>[] = useMemo(
+    () =>
+      buildColumns({
+        disableRowActions,
+        onEdit: (workingHour) => onEditClick?.(workingHour),
+        onDelete: (id) => onDeleteRequest?.([id]),
+      }),
+    [disableRowActions, onDeleteRequest, onEditClick],
+  );
+
+  const table: TableInstance<WorkingHour> = useReactTable({
+    data: data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    manualPagination: true,
+    getRowId: (row) => String(row.id),
+    state: {
+      rowSelection,
+    },
+    enableRowSelection: true,
+    onRowSelectionChange: setRowSelection,
+  });
+
+  const selectedIds: number[] = table
+    .getFilteredSelectedRowModel()
+    .rows.map((row) => row.original.id)
+    .filter((id): id is number => id != null);
+  const hasSelection = selectedIds.length > 0;
+
+  return (
+    <>
+      <div className="flex justify-end gap-2">
+        <div className="mr-auto">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="cursor-pointer">
+                <span className="hidden lg:inline">Actions</span>
+                <IconChevronDown />
+              </Button>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent align="start" className="w-56">
+              <DropdownMenuItem
+                className="cursor-pointer"
+                variant="destructive"
+                disabled={!hasSelection}
+                onClick={() => {
+                  onDeleteRequest?.(selectedIds);
+                }}
+              >
+                <IconTrash />
+                <span>Delete Selected</span>
+                {hasSelection ? (
+                  <span className="ml-auto text-xs text-muted-foreground">
+                    {selectedIds.length} selected
+                  </span>
+                ) : null}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" className="cursor-pointer">
+              <IconLayoutColumns />
+              <span className="hidden lg:inline">Customize Columns</span>
+              <span className="lg:hidden">Columns</span>
+              <IconChevronDown />
+            </Button>
+          </DropdownMenuTrigger>
+
+          <DropdownMenuContent align="end" className="w-56">
+            {table
+              .getAllColumns()
+              .filter((column) => column.getCanHide())
+              .map((column) => (
+                <DropdownMenuCheckboxItem
+                  key={column.id}
+                  className="capitalize cursor-pointer"
+                  checked={column.getIsVisible()}
+                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                >
+                  {typeof column.columnDef.header === "string"
+                    ? column.columnDef.header
+                    : "Column"}{" "}
+                </DropdownMenuCheckboxItem>
+              ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <Button size="sm" className="cursor-pointer" onClick={onCreateClick}>
+          <IconPlus />
+        </Button>
+      </div>
+      <div className="rounded-lg border bg-card">
+        <div className="px-6 py-2">
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((hg) => (
+                <TableRow key={hg.id}>
+                  {hg.headers.map((header) => (
+                    <TableHead key={header.id}>
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
+                    </TableHead>
+                  ))}
+                </TableRow>
+              ))}
+            </TableHeader>
+
+            <TableBody>
+              {table.getRowModel().rows.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow key={row.id}>
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center text-muted-foreground"
+                  >
+                    No Working Hours found
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default WorkingHoursTable;
