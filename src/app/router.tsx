@@ -5,9 +5,13 @@ import {
   ForgotPasswordPage,
   ResetPasswordConfirmPage,
 } from "@/features/auth/pages";
-import DashboardLayout from "@/features/dashboard/layouts/DashboardLayout";
-import { DashboardPage } from "@/features/dashboard/pages";
+import DashboardLayout from "@/shared/components/table/DashboardLayout";
 import { PrivateRoute } from "@/shared/components/PrivateRoute";
+
+import DashboardPage from "@/features/dashboard/pages/DashboardPage";
+import AppointmentsPage from "@/features/appointments/pages/AppointmentsPage";
+import SchedulesPage from "@/features/schedules/pages/SchedulesPage";
+import WorkingHoursPage from "@/features/working-hours/pages/WorkingHoursPage";
 
 export const router = createBrowserRouter([
   {
@@ -39,9 +43,9 @@ export const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <DashboardPage /> },
-      { path: "appointments", element: <div>Appointments Page</div> },
-      { path: "schedule", element: <div>Schedule Page</div> },
-      { path: "settings", element: <div>Settings Page</div> },
+      { path: "appointments", element: <AppointmentsPage /> },
+      { path: "schedule", element: <SchedulesPage /> },
+      { path: "working-hours", element: <WorkingHoursPage /> },
     ],
   },
 ]);
