@@ -1,30 +1,31 @@
+import { useTranslation } from "react-i18next";
 import { ChartAreaInteractive } from "../components/chart-area-interactive";
 import { SectionCards } from "../components/section-cards";
-
 import { useDashboardData } from "../hooks/useDashboardData";
 import type { CardData } from "../types";
 import { Spinner } from "@/shared/components/ui/spinner";
 
 function DashboardPage() {
+  const { t } = useTranslation();
   const { data: dashboardData, isPending } = useDashboardData();
   const cardsData: CardData[] = [
     {
-      title: "Total Earnings",
+      title: t("dashboard.total_earnings"),
       value: `$${dashboardData?.total_earnings ?? 0}`,
-      description: "Earnings for the last month",
-      caption: "Patients for the current month",
+      description: t("dashboard.earnings_last_month"),
+      caption: t("dashboard.patients_current_month"),
     },
     {
-      title: "Total Patients",
+      title: t("dashboard.total_patients"),
       value: dashboardData?.total_patients ?? 0,
-      description: "Active patients",
-      caption: "Patients under care",
+      description: t("dashboard.active_patients"),
+      caption: t("dashboard.patients_under_care"),
     },
     {
-      title: "Total Appointments",
+      title: t("dashboard.total_appointments"),
       value: dashboardData?.total_appointments ?? 0,
-      description: "Appointments this month",
-      caption: "Scheduled this month",
+      description: t("dashboard.appointments_this_month"),
+      caption: t("dashboard.scheduled_this_month"),
     },
   ];
 

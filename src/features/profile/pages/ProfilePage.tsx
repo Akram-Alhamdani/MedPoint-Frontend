@@ -7,6 +7,16 @@ import {
   IconStethoscope,
   IconUserCircle,
 } from "@tabler/icons-react";
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from "@/shared/components/ui/item";
+import { ShieldAlertIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 
 // Helper to resolve image URL
@@ -31,6 +41,7 @@ function resolveImageUrl(image: string | null): string | null {
 }
 import { toast } from "sonner";
 
+import { useUploadDegreeFile } from "../hooks/useUploadDegreeFile";
 import { useProfileData } from "../hooks/useProfileData";
 import { useUpdateProfile } from "../hooks/useUpdateProfile";
 import { useSpecialtiesData } from "../hooks/useSpecialtiesData";
@@ -196,14 +207,17 @@ function ProfileSkeleton() {
 
 export default function ProfilePage() {
   const { data: profile, isLoading } = useProfileData();
-  const { data: specialties, isLoading: isSpecialtiesLoading } =
-    useSpecialtiesData();
+  const { data: specialties } = useSpecialtiesData();
   const updateProfile = useUpdateProfile();
+  const { t } = useTranslation();
 
   const [formState, setFormState] = useState<EditableProfile>(emptyFormState);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const { mutate: uploadDegree, isPending: isUploadingDegree } =
+    useUploadDegreeFile();
+  const zipInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (profile) {
@@ -301,6 +315,96 @@ export default function ProfilePage() {
     setAvatarPreview(URL.createObjectURL(file));
   };
 
+  const handleCompressedUpload = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const allowedTypes = [
+      "application/zip",
+      "application/x-zip-compressed",
+      "application/x-rar-compressed",
+      "application/x-7z-compressed",
+      "application/x-tar",
+      "application/gzip",
+      "application/x-bzip2",
+      "application/x-ace-compressed",
+      "application/x-arc-compressed",
+      "application/x-arj",
+      "application/x-lzh",
+      "application/x-cab",
+      "application/x-iso9660-image",
+      "application/x-compress",
+      "application/x-apple-diskimage",
+      "application/x-xz",
+      "application/x-lzip",
+      "application/x-lzma",
+      "application/x-lzop",
+      "application/x-rpm",
+      "application/x-deb",
+      "application/x-msi",
+      "application/x-7z-compressed",
+      "application/x-zip",
+      "application/x-zip-compressed",
+      "application/x-rar",
+      "application/x-rar-compressed",
+      "application/x-tar",
+      "application/x-gzip",
+      "application/x-bzip2",
+      "application/x-ace",
+      "application/x-arc",
+      "application/x-arj",
+      "application/x-lzh",
+      "application/x-cab",
+      "application/x-iso9660-image",
+      "application/x-compress",
+      "application/x-apple-diskimage",
+      "application/x-xz",
+      "application/x-lzip",
+      "application/x-lzma",
+      "application/x-lzop",
+      "application/x-rpm",
+      "application/x-deb",
+      "application/x-msi",
+    ];
+    const allowedExtensions = [
+      ".zip",
+      ".rar",
+      ".7z",
+      ".tar",
+      ".gz",
+      ".bz2",
+      ".ace",
+      ".arc",
+      ".arj",
+      ".lzh",
+      ".cab",
+      ".iso",
+      ".xz",
+      ".lzip",
+      ".lzma",
+      ".lzop",
+      ".rpm",
+      ".deb",
+      ".msi",
+    ];
+    const fileType = file.type;
+    const fileName = file.name.toLowerCase();
+    const isAllowed =
+      allowedTypes.includes(fileType) ||
+      allowedExtensions.some((ext) => fileName.endsWith(ext));
+    if (!isAllowed) {
+      toast.error(
+        t(
+          "profile.degree_upload.invalid_type",
+          "Please upload a compressed file (zip, rar, 7z, tar, etc.)",
+        ),
+      );
+      return;
+    }
+    uploadDegree(file);
+  };
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -366,7 +470,60 @@ export default function ProfilePage() {
 
   return (
     <div className="space-y-6 p-4 md:p-6">
-      <Card className="shadow-sm">
+      {!profile.is_verified && !profile.degree_document && (
+        <Item
+          variant="outline"
+          className="bg-destructive/10 border-destructive"
+        >
+          <ItemMedia variant="icon" className="bg-destructive/10">
+            <ShieldAlertIcon className="text-destructive bg-destructive/10" />
+          </ItemMedia>
+          <ItemContent>
+            <ItemTitle className="text-destructive">
+              {t("profile.verify_account.title")}
+            </ItemTitle>
+            <ItemDescription className="text-destructive">
+              {t("profile.verify_account.description")}
+            </ItemDescription>
+          </ItemContent>
+          <ItemActions>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => zipInputRef.current?.click()}
+              disabled={isUploadingDegree}
+            >
+              {isUploadingDegree
+                ? t("profile.verify_account.uploading")
+                : t("profile.verify_account.upload_button")}
+            </Button>
+            <input
+              ref={zipInputRef}
+              type="file"
+              accept=".zip,.rar,.7z,.tar,.gz,.bz2,.ace,.arc,.arj,.lzh,.cab,.iso,.xz,.lzip,.lzma,.lzop,.rpm,.deb,.msi"
+              onChange={handleCompressedUpload}
+              className="hidden"
+            />
+          </ItemActions>
+        </Item>
+      )}
+      {!profile.is_verified && profile.degree_document && (
+        <Item variant="outline" className="bg-orange-500/10 border-orange-500">
+          <ItemMedia variant="icon" className="bg-orange-500/10">
+            <ShieldAlertIcon className="text-orange-500 bg-orange-500/10" />
+          </ItemMedia>
+          <ItemContent>
+            <ItemTitle className="text-orange-500">
+              {t("profile.pending_verification.title")}
+            </ItemTitle>
+            <ItemDescription className="text-orange-500">
+              {t("profile.pending_verification.description")}
+            </ItemDescription>
+          </ItemContent>
+        </Item>
+      )}
+
+      <Card className="shadow-sm ">
         <CardContent className="flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
           {/* Identity */}
           <div className="flex items-center gap-4">
@@ -409,17 +566,13 @@ export default function ProfilePage() {
                 </h1>
 
                 {/* Verification badge (always shown) */}
-                <Badge
-                  variant={profile.is_verified ? "success" : "secondary"}
-                  className="gap-1"
-                >
-                  {profile.is_verified ? (
-                    <IconShieldCheck className="size-3" />
-                  ) : (
-                    <IconAlertCircle className="size-3" />
-                  )}
-                  {profile.is_verified ? "Verified" : "Not verified"}
-                </Badge>
+                {profile.is_verified && (
+                  <Badge variant="outline" className={` border-blue-300 gap-1`}>
+                    <IconShieldCheck className="size-3 text-blue-300" />
+
+                    <span className={`text-blue-300`}>Verified</span>
+                  </Badge>
+                )}
 
                 {/* Status badge */}
                 {statusInfo && (
@@ -443,7 +596,7 @@ export default function ProfilePage() {
                 </div>
               ) : (
                 <p className="text-xs text-muted-foreground">
-                  Rating not available yet
+                  {t("profile.rating_not_available")}
                 </p>
               )}
             </div>
@@ -455,16 +608,19 @@ export default function ProfilePage() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center gap-2 text-base">
-              <IconUserCircle className="size-5" /> Basic details
+              <IconUserCircle className="size-5" />{" "}
+              {t("profile.basic_details_form.title")}
             </CardTitle>
             <CardDescription>
-              Personal details patients see first.
+              {t("profile.basic_details_form.description")}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <FieldGroup className="grid gap-5 md:grid-cols-2">
               <Field>
-                <FieldLabel htmlFor="full_name">Full name</FieldLabel>
+                <FieldLabel htmlFor="full_name">
+                  {t("profile.basic_details_form.full_name")}
+                </FieldLabel>
                 <FieldContent>
                   <Input
                     id="full_name"
@@ -478,14 +634,18 @@ export default function ProfilePage() {
               </Field>
 
               <Field>
-                <FieldLabel htmlFor="email">Email</FieldLabel>
+                <FieldLabel htmlFor="email">
+                  {t("profile.basic_details_form.email")}
+                </FieldLabel>
                 <FieldContent>
                   <Input id="email" value={profile.email} disabled />
                 </FieldContent>
               </Field>
 
               <Field>
-                <FieldLabel htmlFor="gender">Gender</FieldLabel>
+                <FieldLabel htmlFor="gender">
+                  {t("profile.basic_details_form.gender.label")}
+                </FieldLabel>
                 <FieldContent>
                   <Select
                     value={formState.gender}
@@ -497,15 +657,21 @@ export default function ProfilePage() {
                       <SelectValue placeholder="Select gender" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="M">Male</SelectItem>
-                      <SelectItem value="F">Female</SelectItem>
+                      <SelectItem value="M">
+                        {t("profile.basic_details_form.gender.male")}
+                      </SelectItem>
+                      <SelectItem value="F">
+                        {t("profile.basic_details_form.gender.female")}
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </FieldContent>
               </Field>
 
               <Field>
-                <FieldLabel htmlFor="dob">Date of birth</FieldLabel>
+                <FieldLabel htmlFor="dob">
+                  {t("profile.basic_details_form.dob")}
+                </FieldLabel>
                 <FieldContent>
                   <Input
                     id="dob"
@@ -517,7 +683,9 @@ export default function ProfilePage() {
               </Field>
 
               <Field>
-                <FieldLabel htmlFor="address_line1">Address line 1</FieldLabel>
+                <FieldLabel htmlFor="address_line1">
+                  {t("profile.basic_details_form.address_line_1")}
+                </FieldLabel>
                 <FieldContent>
                   <Input
                     id="address_line1"
@@ -531,7 +699,9 @@ export default function ProfilePage() {
               </Field>
 
               <Field>
-                <FieldLabel htmlFor="address_line2">Address line 2</FieldLabel>
+                <FieldLabel htmlFor="address_line2">
+                  {t("profile.basic_details_form.address_line_2")}
+                </FieldLabel>
                 <FieldContent>
                   <Input
                     id="address_line2"
@@ -550,21 +720,26 @@ export default function ProfilePage() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center gap-2 text-base">
-              <IconStethoscope className="size-5" /> Professional details
+              <IconStethoscope className="size-5" />
+              {t("profile.professional_details_form.title")}
             </CardTitle>
-            <CardDescription>Show what you do best.</CardDescription>
+            <CardDescription>
+              {t("profile.professional_details_form.description")}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <FieldGroup className="grid gap-5 md:grid-cols-2">
               <Field>
-                <FieldLabel htmlFor="specialty">Specialty</FieldLabel>
+                <FieldLabel htmlFor="specialty">
+                  {t("profile.professional_details_form.speciality.label")}
+                </FieldLabel>
                 <FieldContent>
                   <Select
                     value={formState.specialtyId}
                     onValueChange={(value) =>
                       handleFieldChange("specialtyId", value)
                     }
-                    disabled={isSpecialtiesLoading}
+                    disabled={true}
                   >
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select specialty" />
@@ -581,7 +756,9 @@ export default function ProfilePage() {
               </Field>
 
               <Field>
-                <FieldLabel htmlFor="fees">Consultation fee (USD)</FieldLabel>
+                <FieldLabel htmlFor="fees">
+                  {t("profile.professional_details_form.consultation_fee")}
+                </FieldLabel>
                 <FieldContent>
                   <Input
                     id="fees"
@@ -595,7 +772,9 @@ export default function ProfilePage() {
               </Field>
 
               <Field>
-                <FieldLabel htmlFor="experience">Experience</FieldLabel>
+                <FieldLabel htmlFor="experience">
+                  {t("profile.professional_details_form.experience_years")}
+                </FieldLabel>
                 <FieldContent>
                   <Input
                     id="experience"
@@ -604,12 +783,15 @@ export default function ProfilePage() {
                       handleFieldChange("experience", e.target.value)
                     }
                     placeholder="Years of practice or summary"
+                    disabled={true}
                   />
                 </FieldContent>
               </Field>
 
               <Field>
-                <FieldLabel htmlFor="education">Education</FieldLabel>
+                <FieldLabel htmlFor="education">
+                  {t("profile.professional_details_form.education")}
+                </FieldLabel>
                 <FieldContent>
                   <Input
                     id="education"
@@ -618,12 +800,15 @@ export default function ProfilePage() {
                       handleFieldChange("education", e.target.value)
                     }
                     placeholder="Medical school, residencies"
+                    disabled={true}
                   />
                 </FieldContent>
               </Field>
 
               <Field className="md:col-span-2">
-                <FieldLabel htmlFor="about">About</FieldLabel>
+                <FieldLabel htmlFor="about">
+                  {t("profile.professional_details_form.about")}
+                </FieldLabel>
                 <FieldContent>
                   <textarea
                     id="about"
@@ -642,11 +827,10 @@ export default function ProfilePage() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center gap-2 text-base">
-              <IconMapPin className="size-5" /> Visibility & actions
+              <IconMapPin className="size-5" />
+              {t("profile.footer.title")}
             </CardTitle>
-            <CardDescription>
-              Save changes to update what patients and staff see.
-            </CardDescription>
+            <CardDescription>{t("profile.footer.description")}</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
@@ -669,14 +853,16 @@ export default function ProfilePage() {
                 disabled={updateProfile.isPending}
                 className="cursor-pointer"
               >
-                Reset
+                {t("profile.footer.actions.reset")}
               </Button>
               <Button
                 type="submit"
                 disabled={updateProfile.isPending}
                 className="cursor-pointer"
               >
-                {updateProfile.isPending ? "Saving..." : "Save changes"}
+                {updateProfile.isPending
+                  ? t("profile.footer.actions.saving")
+                  : t("profile.footer.actions.save")}
               </Button>
             </div>
           </CardContent>

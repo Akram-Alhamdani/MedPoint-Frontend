@@ -1,18 +1,15 @@
 import { Button } from "@/shared/components/ui/button";
 import { Label } from "@/shared/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/shared/components/ui/select";
-import {
-  IconChevronLeft,
-  IconChevronRight,
-  IconChevronsLeft,
-  IconChevronsRight,
-} from "@tabler/icons-react";
+import { Select } from "@/shared/components/ui/select";
+import { SelectContent } from "@/shared/components/ui/select";
+import { SelectItem } from "@/shared/components/ui/select";
+import { SelectTrigger } from "@/shared/components/ui/select";
+import { SelectValue } from "@/shared/components/ui/select";
+import { IconChevronLeft } from "@tabler/icons-react";
+import { IconChevronRight } from "@tabler/icons-react";
+import { IconChevronsLeft } from "@tabler/icons-react";
+import { IconChevronsRight } from "@tabler/icons-react";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   pageNumber: number;
@@ -29,13 +26,21 @@ export default function AppointmentsTablePagination({
   onPageChange,
   onPageSizeChange,
 }: Props) {
+  const { t, i18n } = useTranslation();
+  const isRTL =
+    i18n.language === "ar" ||
+    (typeof document !== "undefined" && document.dir === "rtl");
+
   return (
     <div className="flex items-center justify-between px-4">
       <div className="hidden flex-1 text-sm text-muted-foreground lg:flex" />
-
-      <div className="flex w-full items-center gap-8 lg:w-fit">
-        <div className="hidden items-center gap-2 lg:flex">
-          <Label>Rows per page</Label>
+      <div
+        className={`flex w-full items-center gap-8 lg:w-fit${isRTL ? " flex-row-reverse" : ""}`}
+      >
+        <div
+          className={`hidden items-center gap-2 lg:flex${isRTL ? " flex-row-reverse" : ""}`}
+        >
+          <Label>{t("pagination.rows_per_page")}</Label>
           <Select
             value={String(pageSize)}
             onValueChange={(value) => {
@@ -55,11 +60,9 @@ export default function AppointmentsTablePagination({
             </SelectContent>
           </Select>
         </div>
-
         <div className="text-sm">
-          Page {pageNumber} of {totalPages}
+          {t("pagination.page", { page: pageNumber, total: totalPages })}
         </div>
-
         <div className="flex gap-2">
           <Button
             size="icon"
@@ -67,34 +70,31 @@ export default function AppointmentsTablePagination({
             onClick={() => onPageChange(1)}
             disabled={pageNumber === 1}
           >
-            <IconChevronsLeft />
+            {isRTL ? <IconChevronsRight /> : <IconChevronsLeft />}
           </Button>
-
           <Button
             size="icon"
             variant="outline"
             onClick={() => onPageChange(pageNumber - 1)}
             disabled={pageNumber === 1}
           >
-            <IconChevronLeft />
+            {isRTL ? <IconChevronRight /> : <IconChevronLeft />}
           </Button>
-
           <Button
             size="icon"
             variant="outline"
             onClick={() => onPageChange(pageNumber + 1)}
             disabled={pageNumber === totalPages}
           >
-            <IconChevronRight />
+            {isRTL ? <IconChevronLeft /> : <IconChevronRight />}
           </Button>
-
           <Button
             size="icon"
             variant="outline"
             onClick={() => onPageChange(totalPages)}
             disabled={pageNumber === totalPages}
           >
-            <IconChevronsRight />
+            {isRTL ? <IconChevronsLeft /> : <IconChevronsRight />}
           </Button>
         </div>
       </div>

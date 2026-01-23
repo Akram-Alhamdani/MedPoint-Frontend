@@ -30,11 +30,15 @@ export function OTPForm({
   email,
   onSuccess,
   mode = "email",
+  t,
+  isRTL,
   ...props
 }: React.ComponentProps<typeof Card> & {
   email: string;
   onSuccess?: (data?: unknown) => void;
   mode?: "email" | "password-reset";
+  t: (key: string) => string;
+  isRTL: boolean;
 }) {
   const [otp, setOtp] = useState("");
   const verifyEmailOtp = useVerifyEmailOTP();
@@ -56,18 +60,20 @@ export function OTPForm({
   return (
     <Card {...props}>
       <CardHeader>
-        <CardTitle>
+        <CardTitle className={`${isRTL ? "text-right" : "text-left"}`}>
           {mode === "password-reset"
-            ? "Reset your password"
-            : "Verify your email"}
+            ? t("auth.otp.title_reset")
+            : t("auth.otp.title_verify")}
         </CardTitle>
-        <CardDescription>We sent a 6-digit code to your email.</CardDescription>
+        <CardDescription className={`${isRTL ? "text-right" : "text-left"}`}>
+          {t("auth.otp.description")}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit}>
           <FieldGroup>
             <Field>
-              <FieldLabel htmlFor="otp">Verification code</FieldLabel>
+              <FieldLabel htmlFor="otp">{t("auth.otp.code_label")}</FieldLabel>
               <InputOTP
                 maxLength={6}
                 value={otp}
@@ -84,8 +90,10 @@ export function OTPForm({
                   <InputOTPSlot index={5} />
                 </InputOTPGroup>
               </InputOTP>
-              <FieldDescription>
-                Enter the 6-digit code sent to your email.
+              <FieldDescription
+                className={`${isRTL ? "text-right" : "text-left"}`}
+              >
+                {t("auth.otp.code_description")}
               </FieldDescription>
             </Field>
             <FieldGroup>
@@ -96,10 +104,10 @@ export function OTPForm({
               >
                 {activeMutation.isPending ? (
                   <>
-                    <Spinner /> Verifying...
+                    <Spinner /> {t("auth.otp.verifying")}
                   </>
                 ) : (
-                  "Verify"
+                  t("auth.otp.verify_button")
                 )}
               </Button>
               <FieldDescription className="text-center">
@@ -109,14 +117,16 @@ export function OTPForm({
                     onClick={() =>
                       resendPasswordReset.mutate(email, {
                         onSuccess: () => {
-                          toast.success("OTP resent successfully.");
+                          toast.success(t("auth.otp.resent_success"));
                         },
                       })
                     }
                     disabled={resendPasswordReset.isPending}
                     className="underline cursor-pointer"
                   >
-                    {resendPasswordReset.isPending ? "Resending..." : "Resend"}
+                    {resendPasswordReset.isPending
+                      ? t("auth.otp.resending")
+                      : t("auth.otp.resend")}
                   </button>
                 ) : (
                   <button
@@ -125,7 +135,9 @@ export function OTPForm({
                     disabled={resendEmailOtp.isPending}
                     className="underline cursor-pointer"
                   >
-                    {resendEmailOtp.isPending ? "Resending..." : "Resend"}
+                    {resendEmailOtp.isPending
+                      ? t("auth.otp.resending")
+                      : t("auth.otp.resend")}
                   </button>
                 )}
               </FieldDescription>

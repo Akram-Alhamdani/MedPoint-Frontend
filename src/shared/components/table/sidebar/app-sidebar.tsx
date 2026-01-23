@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 import {
   IconChartBar,
   IconDashboard,
@@ -18,35 +19,30 @@ import {
   SidebarMenuItem,
 } from "@/shared/components/ui/sidebar";
 
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  navMain: [
+function getSidebarNavItems(t: any) {
+  return [
     {
-      title: "Dashboard",
+      title: t("sidebar.dashboard"),
       url: "/doctor/dashboard",
       icon: IconDashboard,
     },
     {
-      title: "Appointments",
+      title: t("sidebar.appointments"),
       url: "/doctor/dashboard/appointments",
       icon: IconListDetails,
     },
     {
-      title: "Schedule",
+      title: t("sidebar.schedule"),
       url: "/doctor/dashboard/schedule",
       icon: IconChartBar,
     },
     {
-      title: "Working Hours",
+      title: t("sidebar.working_hours"),
       url: "/doctor/dashboard/working-hours",
       icon: IconChartBar,
     },
-  ],
-};
+  ];
+}
 
 // Helper to resolve image URL (copied from ProfilePage)
 function resolveImageUrl(image: string | null): string | null {
@@ -70,6 +66,7 @@ function resolveImageUrl(image: string | null): string | null {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { t } = useTranslation();
   const user = localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user") || "")
     : null;
@@ -92,7 +89,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain items={getSidebarNavItems(t)} />
       </SidebarContent>
       <SidebarFooter>
         {user ? (
@@ -105,6 +102,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 avatar: resolveImageUrl
                   ? resolveImageUrl(user!.image)
                   : user!.image || "/default-avatar.png",
+                is_verified_doctor: user!.is_verified_doctor,
               }}
             />
           </div>

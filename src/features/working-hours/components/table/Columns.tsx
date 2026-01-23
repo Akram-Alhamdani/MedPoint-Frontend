@@ -1,7 +1,8 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/shared/components/ui/checkbox";
 import type { WorkingHour } from "../../types";
-import { formatTime } from "../../utils";
+
+import { formatDateTime } from "../../utils/formatDateTime";
 import RowActions from "./RowActions";
 
 type BuildColumnsArgs = {
@@ -14,7 +15,10 @@ const buildColumns = ({
   disableRowActions,
   onEdit,
   onDelete,
-}: BuildColumnsArgs): ColumnDef<WorkingHour>[] => [
+  t,
+}: BuildColumnsArgs & {
+  t: (key: string) => string;
+}): ColumnDef<WorkingHour>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -25,7 +29,7 @@ const buildColumns = ({
             (table.getIsSomePageRowsSelected() && "indeterminate")
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
+          aria-label={t("working_hours.select_all")}
         />
       </div>
     ),
@@ -34,7 +38,7 @@ const buildColumns = ({
         <Checkbox
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
+          aria-label={t("working_hours.select_row")}
         />
       </div>
     ),
@@ -42,22 +46,22 @@ const buildColumns = ({
     enableHiding: false,
   },
   {
-    header: "Start Time",
+    header: t("working_hours.start_time"),
     enableHiding: false,
-    cell: ({ row }) => formatTime(row.original.start_time),
+    cell: ({ row }) => formatDateTime(row.original.start_time),
   },
   {
-    header: "End Time",
+    header: t("working_hours.end_time"),
     enableHiding: false,
-    cell: ({ row }) => formatTime(row.original.end_time),
+    cell: ({ row }) => formatDateTime(row.original.end_time),
   },
   {
-    header: "Patients Left",
+    header: t("working_hours.patient_left"),
     enableHiding: true,
     cell: ({ row }) => row.original.patient_left,
   },
   {
-    header: "Actions",
+    header: t("working_hours.actions"),
     enableHiding: false,
     cell: ({ row }) => (
       <RowActions

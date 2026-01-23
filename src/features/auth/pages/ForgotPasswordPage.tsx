@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ForgotPasswordForm, ResetPasswordConfirmForm } from "../components";
 import { OTPForm } from "@/features/auth/components/OTPForm";
+import { useTranslation } from "react-i18next";
 
 type Step = "FORM" | "OTP" | "RESET";
 
@@ -8,6 +9,8 @@ export function ForgotPasswordPage() {
   const [step, setStep] = useState<Step>("FORM");
   const [email, setEmail] = useState("");
   const [token, setToken] = useState("");
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.language === "ar";
 
   if (step === "FORM") {
     return (
@@ -18,6 +21,8 @@ export function ForgotPasswordPage() {
               setEmail(email);
               setStep("OTP");
             }}
+            isRTL={isRTL}
+            t={t}
           />
         </div>
       </div>
@@ -35,6 +40,8 @@ export function ForgotPasswordPage() {
               setToken(nextToken);
               setStep("RESET");
             }}
+            t={t}
+            isRTL={isRTL}
           />
         </div>
       </div>
@@ -44,7 +51,7 @@ export function ForgotPasswordPage() {
     return (
       <div className="bg-muted flex h-screen flex-col items-center justify-center p-6 md:p-10">
         <div className="flex w-full max-w-sm flex-col">
-          <ResetPasswordConfirmForm email={email} token={token} />
+          <ResetPasswordConfirmForm email={email} token={token} t={t} />
         </div>
       </div>
     );

@@ -15,6 +15,7 @@ import {
 import { Input } from "@/shared/components/ui/input";
 
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import { useLogin } from "../hooks/useLogin";
 import { Spinner } from "@/shared/components/ui/spinner";
@@ -22,9 +23,11 @@ import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 
 export function LoginForm() {
+  const { t, i18n } = useTranslation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const isRTL = i18n.language === "ar";
 
   const navigate = useNavigate();
   const login = useLogin();
@@ -33,7 +36,7 @@ export function LoginForm() {
     e.preventDefault();
 
     if (password.length < 8) {
-      toast.error("Password must be at least 8 characters long");
+      toast.error(t("auth.login.password_min_length"));
       return;
     }
 
@@ -41,24 +44,24 @@ export function LoginForm() {
       { email, password },
       {
         onSuccess: () => navigate("/doctor/dashboard"),
-      }
+      },
     );
   };
 
   return (
     <Card className="shadow-md">
       <CardHeader className="text-center">
-        <CardTitle className="text-xl">Login to your account</CardTitle>
-        <CardDescription>
-          Enter your email below to login to your account
-        </CardDescription>
+        <CardTitle className="text-xl">{t("auth.login.title")}</CardTitle>
+        <CardDescription>{t("auth.login.description")}</CardDescription>
       </CardHeader>
 
       <CardContent>
         <form onSubmit={handleSubmit}>
           <FieldGroup>
             <Field>
-              <FieldLabel htmlFor="email">Email</FieldLabel>
+              <FieldLabel htmlFor="email">
+                {t("auth.login.email_label")}
+              </FieldLabel>
               <Input
                 id="email"
                 type="email"
@@ -68,14 +71,18 @@ export function LoginForm() {
               />
             </Field>
             <Field>
-              <div className="flex items-center justify-between">
-                <FieldLabel htmlFor="password">Password</FieldLabel>
+              <div
+                className={`flex items-center justify-between ${isRTL ? "flex-row-reverse" : ""}`}
+              >
+                <FieldLabel htmlFor="password">
+                  {t("auth.login.password_label")}
+                </FieldLabel>
                 <Link
                   to="/doctor/forgot-password"
                   className="text-sm underline-offset-4 hover:underline"
                   tabIndex={-1}
                 >
-                  Forgot your Password?
+                  {t("auth.login.forgot_password")}
                 </Link>
               </div>
               <div className="relative">
@@ -111,15 +118,15 @@ export function LoginForm() {
               >
                 {login.isPending ? (
                   <>
-                    <Spinner /> Logging in
+                    <Spinner /> {t("auth.login.logging_in")}
                   </>
                 ) : (
-                  "Login"
+                  t("auth.login.login_button")
                 )}
               </Button>
               <FieldDescription className="text-center">
-                Don&apos;t have an account?{" "}
-                <Link to="/doctor/signup">Sign up</Link>
+                {t("auth.login.no_account")}{" "}
+                <Link to="/doctor/signup">{t("auth.login.signup_link")}</Link>
               </FieldDescription>
             </Field>
           </FieldGroup>

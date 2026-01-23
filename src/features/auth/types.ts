@@ -6,6 +6,7 @@ export interface User {
   full_name: string;
   gender: "M" | "F";
   dob: string | null;
+  is_verified_doctor: boolean;
 }
 
 export interface LoginPayload {

@@ -1,0 +1,291 @@
+{
+  "header": {
+    "profile": "الملف الشخصي",
+    "settings": "الإعدادات"
+  },
+  "theme": {
+    "toggle": "تبديل السمة",
+    "light": "فاتح",
+    "dark": "داكن",
+    "system": "النظام"
+  },
+
+  "sidebar": {
+    "dashboard": "لوحة التحكم",
+    "appointments": "المواعيد",
+    "schedule": "الجدول",
+    "working_hours": "ساعات العمل",
+    "profile": "الملف الشخصي",
+    "logout": "تسجيل الخروج"
+  },
+  "profile": {
+    "failed_to_update_profile": "فشل في تحديث الملف الشخصي",
+    "update_success": "تم تحديث الملف الشخصي بنجاح",
+    "verify_account": {
+      "title": "الحساب غير موثق",
+      "description": " يرجى تحميل مستنداتك للتحقق والبدء في قبول المرضى.",
+      "upload_button": "تحميل المستندات",
+      "upload_success": "تم تحميل المستندات بنجاح",
+      "uploading": "جاري التحميل...",
+      "upload_failed": "فشل في تحميل المستندات. يرجى المحاولة مرة أخرى."
+    },
+    "pending_verification": {
+      "title": "التحقق معلق",
+      "description": "تم استلام مستنداتك. سيقوم فريقنا بمراجعتها في أقرب وقت ممكن."
+    },
+    "rating_not_available": "التقييم غير متاح بعد",
+    "basic_details_form": {
+      "title": "التفاصيل الأساسية",
+      "description": "التفاصيل الشخصية التي يراها المرضى أولاً.",
+      "email": "البريد الإلكتروني",
+      "full_name": "الاسم الكامل",
+      "dob": "تاريخ الميلاد",
+      "gender": {
+        "label": "الجنس",
+        "male": "ذكر",
+        "female": "أنثى"
+      },
+      "address_line_1": "العنوان 1",
+      "address_line_2": "العنوان 2"
+    },
+    "professional_details_form": {
+      "title": "التفاصيل المهنية",
+      "description": "اعرض ما تجيده.",
+      "speciality": {
+        "label": "التخصص"
+      },
+      "consultation_fee": "رسوم الاستشارة (دولار أمريكي)",
+      "experience_years": "سنوات الخبرة",
+      "education": "التعليم",
+      "about": "عنك"
+    },
+    "footer": {
+      "title": "الرؤية والإجراءات",
+      "description": "احفظ التغييرات لتحديث ما يراه المرضى والموظفون.",
+      "actions": {
+        "save": "حفظ التغييرات",
+        "saving": "جاري الحفظ...",
+        "reset": "إعادة تعيين"
+      }
+    }
+  },
+  "auth": {
+    "signup": {
+      "title": "إنشاء حساب جديد",
+      "description": "أدخل بريدك الإلكتروني أدناه لإنشاء حسابك",
+      "full_name_label": "الاسم الكامل",
+      "email_label": "البريد الإلكتروني",
+      "password_label": "كلمة المرور",
+      "confirm_password_label": "تأكيد كلمة المرور",
+      "password_min_length": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+      "password_complexity": "يجب أن تحتوي كلمة المرور على حرف كبير وحرف صغير ورقم وحرف خاص واحد على الأقل",
+      "passwords_no_match": "كلمتا المرور غير متطابقتين",
+      "password_hint": "يجب أن تكون 8 أحرف على الأقل.",
+      "creating_account": "جاري إنشاء الحساب",
+      "create_account_button": "إنشاء حساب",
+      "already_have_account": "لديك حساب بالفعل؟",
+      "login_link": "تسجيل الدخول",
+      "failed": "فشل التسجيل. يرجى المحاولة مرة أخرى.",
+      "user_exists": "يوجد مستخدم بهذا البريد الإلكتروني."
+    },
+    "login": {
+      "title": "تسجيل الدخول إلى حسابك",
+      "description": "أدخل بريدك الإلكتروني أدناه لتسجيل الدخول إلى حسابك",
+      "email_label": "البريد الإلكتروني",
+      "password_label": "كلمة المرور",
+      "forgot_password": "نسيت كلمة المرور؟",
+      "password_min_length": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+      "logging_in": "جاري تسجيل الدخول",
+      "login_button": "تسجيل الدخول",
+      "no_account": "ليس لديك حساب؟",
+      "signup_link": "إنشاء حساب",
+      "only_doctors": "يسمح فقط للأطباء",
+      "invalid_credentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+      "success": "تم تسجيل الدخول بنجاح"
+    },
+    "forgot_password": {
+      "title": "نسيت كلمة المرور",
+      "description": "أدخل بريدك الإلكتروني أدناه لإعادة تعيين كلمة المرور",
+      "email_label": "البريد الإلكتروني",
+      "sending": "جاري إرسال بريد إعادة التعيين",
+      "send_button": "إرسال بريد إعادة التعيين",
+      "back_to_login": "العودة لتسجيل الدخول",
+      "failed": "فشل في إرسال طلب إعادة تعيين كلمة المرور. يرجى المحاولة مرة أخرى."
+    },
+    "otp": {
+      "title_reset": "إعادة تعيين كلمة المرور",
+      "title_verify": "تأكيد البريد الإلكتروني",
+      "description": "تم إرسال رمز مكون من 6 أرقام إلى إيميلك.",
+      "code_label": "رمز التحقق",
+      "code_description": "أدخل الرمز المرسل إلى بريدك الإلكتروني.",
+      "verifying": "جاري التحقق...",
+      "verify_button": "تحقق",
+      "resent_success": "تمت إعادة إرسال الرمز بنجاح.",
+      "resending": "جاري الإرسال...",
+      "resend": "إعادة الإرسال",
+      "resend_failed": "فشل في إعادة إرسال رمز التحقق. يرجى المحاولة مرة أخرى.",
+      "invalid_or_expired": "رمز التحقق غير صحيح أو منتهي الصلاحية. يرجى طلب رمز جديد.",
+      "verified": "تم تأكيد البريد الإلكتروني بنجاح! يمكنك الآن تسجيل الدخول."
+    },
+    "reset": {
+      "title": "إعادة تعيين كلمة المرور",
+      "description": "أدخل كلمة المرور الجديدة أدناه",
+      "password_label": "كلمة المرور الجديدة",
+      "confirm_password_label": "تأكيد كلمة المرور",
+      "resetting": "جاري إعادة التعيين...",
+      "reset_button": "إعادة تعيين كلمة المرور",
+      "back_to_login_pre": "العودة إلى",
+      "back_to_login_link": "تسجيل الدخول",
+      "success": "تمت إعادة تعيين كلمة المرور بنجاح!",
+      "failed": "فشل في إعادة تعيين كلمة المرور"
+    },
+    "logout": {
+      "success": "تم تسجيل الخروج بنجاح"
+    }
+  },
+  "dashboard": {
+    "total_earnings": "إجمالي الأرباح",
+    "total_patients": "إجمالي المرضى",
+    "total_appointments": "إجمالي المواعيد",
+    "earnings_last_month": "الأرباح للشهر الحالي",
+    "patients_current_month": "المرضى للشهر الحالي",
+    "active_patients": "المرضى النشطون",
+    "patients_under_care": "المرضى تحت الرعاية",
+    "appointments_this_month": "المواعيد هذا الشهر",
+    "scheduled_this_month": "المجدولة هذا الشهر",
+    "chart": {
+      "title": "إجمالي المرضى",
+      "description_full": "الإجمالي لـ {{range}}",
+      "description_short": "{{range}}",
+      "range_90d": "آخر 3 أشهر",
+      "range_30d": "آخر 30 يومًا",
+      "range_7d": "آخر 7 أيام",
+      "male": "ذكر",
+      "female": "أنثى"
+    }
+  },
+  "appointments": {
+    "patient": "المريض",
+    "age": "العمر",
+    "date_time": "التاريخ والوقت",
+    "status": "الحالة",
+    "payment": "الدفع",
+    "fees": "الرسوم",
+    "actions": "الإجراءات",
+    "online": "عبر الإنترنت",
+    "cash": "نقدًا",
+    "complete": "إكمال",
+    "cancel": "إلغاء",
+    "customize_columns": "تخصيص الأعمدة",
+    "columns": "الأعمدة",
+    "no_appointments_found": "لا توجد مواعيد",
+    "status_pending": "قيد الانتظار",
+    "status_done": "تم",
+    "status_cancelled": "ألغيت"
+  },
+  "schedules": {
+    "select_all": "تحديد الكل",
+    "select_row": "تحديد الصف",
+    "day": "اليوم",
+    "start_time": "وقت البدء",
+    "end_time": "وقت الانتهاء",
+    "max_patients": "الحد الأقصى للمرضى",
+    "actions": "الإجراءات",
+    "edit_schedule": "تعديل الجدول",
+    "delete_schedule": "حذف الجدول",
+    "actions_menu": "الإجراءات",
+    "delete_selected": "حذف المحدد",
+    "selected": "محدد",
+    "customize_columns": "تخصيص الأعمدة",
+    "columns": "الأعمدة",
+    "column": "عمود",
+    "new_schedule": "جدول جديد",
+    "no_schedules_found": "لا توجد جداول",
+
+    "create_dialog": {
+      "title": "إضافة جدول جديد",
+      "description": "حدد اليوم وساعات العمل والحد الأقصى للمرضى لهذا الجدول.",
+      "select_day": "اختر اليوم",
+      "cancel": "إلغاء",
+      "create": "إضافة",
+      "invalid_time": "يجب أن يكون وقت البدء أقل من وقت الانتهاء.",
+      "create_success": "تم إنشاء الجدول بنجاح",
+      "create_failed": "فشل في إنشاء الجدول. يرجى المحاولة مرة أخرى."
+    },
+    "update_dialog": {
+      "title": "تعديل الجدول",
+      "description": "قم بتعديل اليوم أو الفترة الزمنية أو الحد الأقصى للمرضى لهذا الجدول.",
+      "select_day": "اختر اليوم",
+      "cancel": "إلغاء",
+      "save": "حفظ التغييرات",
+      "update_success": "تم تحديث الجدول بنجاح",
+      "update_failed": "فشل في تحديث الجدول. يرجى المحاولة مرة أخرى."
+    },
+
+    "delete_dialog": {
+      "title": "حذف الجداول المحددة؟",
+      "description": "سيتم حذف {{count}} جدول. لا يمكن التراجع عن هذا الإجراء.",
+      "cancel": "إلغاء",
+      "delete": "حذف",
+      "delete_success": "تم حذف الجدول بنجاح",
+      "delete_failed": "فشل في حذف الجدول. يرجى المحاولة مرة أخرى"
+    },
+
+    "fetch_failed": "فشل في جلب بيانات الجداول",
+    "unexpected_error": "حدث خطأ غير متوقع",
+    "days": {
+      "sat": "السبت",
+      "sun": "الأحد",
+      "mon": "الاثنين",
+      "tue": "الثلاثاء",
+      "wed": "الأربعاء",
+      "thu": "الخميس",
+      "fri": "الجمعة"
+    }
+  },
+  "working_hours": {
+    "select_all": "تحديد الكل",
+    "select_row": "تحديد الصف",
+    "start_time": "تاريخ ووقت البدء",
+    "end_time": "تاريخ ووقت الانتهاء",
+    "patient_left": "عدد المرضى المتبقين",
+    "actions": "الإجراءات",
+    "no_data": "لا توجد ساعات عمل متاحة.",
+    "create_success": "تم إنشاء ساعة العمل بنجاح",
+    "create_failed": "فشل في إنشاء ساعة العمل. يرجى المحاولة مرة أخرى.",
+    "fetch_failed": "فشل في جلب بيانات ساعات العمل",
+    "unexpected_error": "حدث خطأ غير متوقع",
+    "delete_success": "تم حذف ساعة العمل بنجاح",
+    "delete_failed": "فشل في حذف ساعة العمل. يرجى المحاولة مرة أخرى.",
+    "update_success": "تم تحديث ساعة العمل بنجاح",
+    "update_failed": "فشل في تحديث ساعة العمل. يرجى المحاولة مرة أخرى.",
+    "update_dialog": {
+      "title": "تعديل ساعة العمل",
+      "description": "قم بتعديل التاريخ أو الفترة الزمنية أو عدد المرضى المتبقين لهذه الساعة.",
+      "cancel": "إلغاء",
+      "save": "حفظ التغييرات"
+    },
+    "delete_dialog": {
+      "title": "حذف ساعات العمل المحددة؟",
+      "description": "سيتم حذف {{count}} ساعة عمل. لا يمكن التراجع عن هذا الإجراء.",
+      "cancel": "إلغاء",
+      "delete": "حذف"
+    },
+    "customize_columns": "تخصيص الأعمدة",
+
+    "create_dialog": {
+      "title": "إضافة ساعة عمل",
+      "description": "أضف ساعة عمل جديدة مع التاريخ، الفترة الزمنية، وسعة المرضى.",
+      "start_time": "تاريخ ووقت البدء",
+      "end_time": "تاريخ ووقت الانتهاء",
+      "patient_left": "عدد المرضى المتبقين",
+      "cancel": "إلغاء",
+      "create": "إضافة",
+      "invalid_time": "يجب أن يكون وقت البدء أقل من وقت الانتهاء."
+    }
+  },
+  "pagination": {
+    "page": "الصفحة {{page}} من {{total}}",
+    "rows_per_page": "عدد الصفوف في الصفحة"
+  }
+}

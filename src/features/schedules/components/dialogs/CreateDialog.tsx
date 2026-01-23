@@ -17,6 +17,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/ui/select";
+
+import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 import type { CreateSchedulePayload } from "../../types";
 
 function CreateDialog({
@@ -32,18 +35,22 @@ function CreateDialog({
   setForm: Dispatch<SetStateAction<CreateSchedulePayload>>;
   onScheduleCreate?: (payload: CreateSchedulePayload) => void;
 }) {
+  const { t, i18n } = useTranslation();
   const isCreateValid =
     !!form.day && !!form.start_time && !!form.end_time && form.max_patients > 0;
 
   const dayOptions = [
-    { value: "SAT", label: "Saturday" },
-    { value: "SUN", label: "Sunday" },
-    { value: "MON", label: "Monday" },
-    { value: "TUE", label: "Tuesday" },
-    { value: "WED", label: "Wednesday" },
-    { value: "THU", label: "Thursday" },
-    { value: "FRI", label: "Friday" },
+    { value: "SAT", label: t("schedules.days.sat", "Saturday") },
+    { value: "SUN", label: t("schedules.days.sun", "Sunday") },
+    { value: "MON", label: t("schedules.days.mon", "Monday") },
+    { value: "TUE", label: t("schedules.days.tue", "Tuesday") },
+    { value: "WED", label: t("schedules.days.wed", "Wednesday") },
+    { value: "THU", label: t("schedules.days.thu", "Thursday") },
+    { value: "FRI", label: t("schedules.days.fri", "Friday") },
   ];
+  const isRTL =
+    i18n.language === "ar" ||
+    (typeof document !== "undefined" && document.dir === "rtl");
   return (
     <Dialog
       open={createDialogOpen}
@@ -60,17 +67,34 @@ function CreateDialog({
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create schedule</DialogTitle>
-          <DialogDescription>
-            Set the day, working hours, and maximum patients for this schedule.
+          <DialogTitle className={isRTL ? "text-right mt-6" : ""}>
+            {t("schedules.create_dialog.title", "Create schedule")}
+          </DialogTitle>
+          <DialogDescription className={isRTL ? "text-right" : ""}>
+            {t(
+              "schedules.create_dialog.description",
+              "Set the day, working hours, and maximum patients for this schedule.",
+            )}
           </DialogDescription>
         </DialogHeader>
 
         <form
-          className="space-y-5"
+          className={isRTL ? "space-y-5 text-right" : "space-y-5"}
           onSubmit={(e) => {
             e.preventDefault();
             if (!isCreateValid) return;
+            // Check if start_time < end_time
+            const start = form.start_time;
+            const end = form.end_time;
+            if (start && end && start >= end) {
+              toast.error(
+                t(
+                  "schedules.create_dialog.invalid_time",
+                  "Start time must be less than end time.",
+                ),
+              );
+              return;
+            }
             onScheduleCreate?.(form);
             setCreateDialogOpen(false);
             setForm({
@@ -83,7 +107,7 @@ function CreateDialog({
         >
           <div className="space-y-1">
             <Label htmlFor="day" className="mb-2">
-              Day
+              {t("schedules.day", "Day")}
             </Label>
             <Select
               value={form.day}
@@ -95,7 +119,12 @@ function CreateDialog({
               }
             >
               <SelectTrigger id="day">
-                <SelectValue placeholder="Select a day" />
+                <SelectValue
+                  placeholder={t(
+                    "schedules.create_dialog.select_day",
+                    "Select a day",
+                  )}
+                />
               </SelectTrigger>
               <SelectContent>
                 {dayOptions.map((day) => (
@@ -107,10 +136,16 @@ function CreateDialog({
             </Select>
           </div>
 
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div
+            className={
+              isRTL
+                ? "grid grid-cols-1 gap-3 sm:grid-cols-2 text-right"
+                : "grid grid-cols-1 gap-3 sm:grid-cols-2"
+            }
+          >
             <div className="space-y-1">
               <Label htmlFor="start_time" className="mb-2">
-                Start time
+                {t("schedules.start_time", "Start time")}
               </Label>
               <Input
                 id="start_time"
@@ -127,7 +162,7 @@ function CreateDialog({
             </div>
             <div className="space-y-1">
               <Label htmlFor="end_time" className="mb-2">
-                End time
+                {t("schedules.end_time", "End time")}
               </Label>
               <Input
                 id="end_time"
@@ -146,7 +181,7 @@ function CreateDialog({
 
           <div className="space-y-1">
             <Label htmlFor="max_patients" className="mb-2">
-              Max patients
+              {t("schedules.max_patients", "Max patients")}
             </Label>
             <Input
               id="max_patients"
@@ -163,21 +198,21 @@ function CreateDialog({
             />
           </div>
 
-          <DialogFooter>
+          <DialogFooter className={isRTL ? "flex-row-reverse" : ""}>
             <Button
               type="button"
               variant="outline"
               className="cursor-pointer"
               onClick={() => setCreateDialogOpen(false)}
             >
-              Cancel
+              {t("schedules.create_dialog.cancel", "Cancel")}
             </Button>
             <Button
               type="submit"
               className="cursor-pointer"
               disabled={!isCreateValid}
             >
-              Create
+              {t("schedules.create_dialog.create", "Create")}
             </Button>
           </DialogFooter>
         </form>

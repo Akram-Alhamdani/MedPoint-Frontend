@@ -21,6 +21,7 @@ import { Button } from "@/shared/components/ui/button";
 import { IconChevronDown, IconLayoutColumns } from "@tabler/icons-react";
 import type { Appointment } from "../../types";
 import { appointmentColumns } from "./Columns";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   data: Appointment[];
@@ -35,6 +36,7 @@ export default function AppointmentsTable({
   onComplete,
   onCancel,
 }: Props) {
+  const { t } = useTranslation();
   const table = useReactTable({
     data,
     columns: appointmentColumns(isActionPending, onComplete, onCancel),
@@ -49,8 +51,12 @@ export default function AppointmentsTable({
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm">
               <IconLayoutColumns />
-              <span className="hidden lg:inline">Customize Columns</span>
-              <span className="lg:hidden">Columns</span>
+              <span className="hidden lg:inline">
+                {t("appointments.customize_columns", "Customize Columns")}
+              </span>
+              <span className="lg:hidden">
+                {t("appointments.columns", "Columns")}
+              </span>
               <IconChevronDown />
             </Button>
           </DropdownMenuTrigger>
@@ -69,7 +75,10 @@ export default function AppointmentsTable({
                   }
                 >
                   {typeof column.columnDef.header === "string"
-                    ? column.columnDef.header
+                    ? t(
+                        `appointments.${column.columnDef.header.toLowerCase()}`,
+                        column.columnDef.header,
+                      )
                     : column.id}
                 </DropdownMenuCheckboxItem>
               ))}
@@ -86,7 +95,7 @@ export default function AppointmentsTable({
                     <TableHead key={header.id}>
                       {flexRender(
                         header.column.columnDef.header,
-                        header.getContext()
+                        header.getContext(),
                       )}
                     </TableHead>
                   ))}
@@ -102,7 +111,7 @@ export default function AppointmentsTable({
                       <TableCell key={cell.id}>
                         {flexRender(
                           cell.column.columnDef.cell,
-                          cell.getContext()
+                          cell.getContext(),
                         )}
                       </TableCell>
                     ))}
@@ -114,7 +123,10 @@ export default function AppointmentsTable({
                     colSpan={table.getAllColumns().length}
                     className="h-24 text-center text-muted-foreground"
                   >
-                    No appointments found
+                    {t(
+                      "appointments.no_appointments_found",
+                      "No appointments found",
+                    )}
                   </TableCell>
                 </TableRow>
               )}

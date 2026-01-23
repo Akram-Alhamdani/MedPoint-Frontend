@@ -1,3 +1,15 @@
+// Convert ISO string to 'YYYY-MM-DDTHH:mm' for datetime-local input
+export function toInputDateTime(value?: string | null): string {
+  if (!value) return "";
+  const date = new Date(value);
+  if (isNaN(date.getTime())) return "";
+  const yyyy = date.getUTCFullYear();
+  const mm = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const dd = String(date.getUTCDate()).padStart(2, "0");
+  const hh = String(date.getUTCHours()).padStart(2, "0");
+  const min = String(date.getUTCMinutes()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}T${hh}:${min}`;
+}
 export function formatTime(value?: string | null, locale = "en-US"): string {
   if (!value) return "-";
 

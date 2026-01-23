@@ -21,8 +21,11 @@ import { Link } from "react-router-dom";
 
 export function ForgotPasswordForm({
   onSuccess,
+  t,
 }: {
   onSuccess: (email: string) => void;
+  t: (key: string) => string;
+  isRTL: boolean;
 }) {
   const [email, setEmail] = useState("");
 
@@ -41,16 +44,20 @@ export function ForgotPasswordForm({
   return (
     <Card className="shadow-md">
       <CardHeader className="text-center">
-        <CardTitle className="text-xl">Forgot Password</CardTitle>
+        <CardTitle className="text-xl">
+          {t("auth.forgot_password.title")}
+        </CardTitle>
         <CardDescription>
-          Enter your email below to reset your password
+          {t("auth.forgot_password.description")}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit}>
           <FieldGroup>
             <Field>
-              <FieldLabel htmlFor="email">Email</FieldLabel>
+              <FieldLabel htmlFor="email">
+                {t("auth.forgot_password.email_label")}
+              </FieldLabel>
               <Input
                 id="email"
                 type="email"
@@ -67,14 +74,16 @@ export function ForgotPasswordForm({
               >
                 {forgotPassword.isPending ? (
                   <>
-                    <Spinner /> Sending reset email
+                    <Spinner /> {t("auth.forgot_password.sending")}
                   </>
                 ) : (
-                  "Send Reset Email"
+                  t("auth.forgot_password.send_button")
                 )}
               </Button>
               <FieldDescription className="text-center">
-                <Link to="/doctor/login">Go back to login</Link>
+                <Link to="/doctor/login">
+                  {t("auth.forgot_password.back_to_login")}
+                </Link>
               </FieldDescription>
             </Field>
           </FieldGroup>

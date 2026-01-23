@@ -2,6 +2,7 @@ import {
   IconDotsVertical,
   IconLogout,
   IconUserCircle,
+  IconShieldCheck,
 } from "@tabler/icons-react";
 
 import {
@@ -26,6 +27,7 @@ import {
 } from "@/shared/components/ui/sidebar";
 import { useLogout } from "@/features/auth/hooks/useLogout";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export function NavUser({
   user,
@@ -34,10 +36,12 @@ export function NavUser({
     name: string;
     email: string;
     avatar: string;
+    is_verified_doctor?: boolean;
   };
 }) {
   const { isMobile } = useSidebar();
   const logout = useLogout();
+  const { t } = useTranslation();
 
   return (
     <SidebarMenu>
@@ -53,7 +57,15 @@ export function NavUser({
                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user.name}</span>
+                <span className="truncate font-medium flex items-center gap-1">
+                  {user.is_verified_doctor && (
+                    <IconShieldCheck
+                      className="text-blue-500 size-4"
+                      title="Verified"
+                    />
+                  )}
+                  {user.name}
+                </span>
                 <span className="text-muted-foreground truncate text-xs">
                   {user.email}
                 </span>
@@ -74,7 +86,15 @@ export function NavUser({
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.name}</span>
+                  <span className="truncate font-medium flex items-center gap-1">
+                    {user.name}
+                    {user.is_verified_doctor && (
+                      <IconShieldCheck
+                        className="text-blue-500 size-4"
+                        title="Verified"
+                      />
+                    )}
+                  </span>
                   <span className="text-muted-foreground truncate text-xs">
                     {user.email}
                   </span>
@@ -85,7 +105,7 @@ export function NavUser({
             <DropdownMenuGroup>
               <DropdownMenuItem asChild className="cursor-pointer">
                 <Link to="/doctor/dashboard/profile">
-                  <IconUserCircle /> Profile
+                  <IconUserCircle /> {t("sidebar.profile")}
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
@@ -95,7 +115,7 @@ export function NavUser({
               className="cursor-pointer text-destructive hover:text-destructive!"
             >
               <IconLogout className="text-destructive" />
-              Log out
+              {t("sidebar.logout")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

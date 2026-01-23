@@ -24,9 +24,11 @@ import { toast } from "sonner";
 export function ResetPasswordConfirmForm({
   email,
   token,
+  t,
 }: {
   email: string;
   token: string;
+  t: (key: string) => string;
 }) {
   const resetPassword = useResetPasswordConfirm();
 
@@ -47,7 +49,7 @@ export function ResetPasswordConfirmForm({
     }
     if (!complexityRegex.test(password)) {
       toast.error(
-        "Password must include at least one uppercase letter, one lowercase letter, one number, and one special character"
+        "Password must include at least one uppercase letter, one lowercase letter, one number, and one special character",
       );
       return;
     }
@@ -67,15 +69,17 @@ export function ResetPasswordConfirmForm({
   return (
     <Card className="shadow-md">
       <CardHeader className="text-center">
-        <CardTitle className="text-xl">Reset your password</CardTitle>
-        <CardDescription>Enter your new password below</CardDescription>
+        <CardTitle className="text-xl">{t("auth.reset.title")}</CardTitle>
+        <CardDescription>{t("auth.reset.description")}</CardDescription>
       </CardHeader>
 
       <CardContent>
         <form onSubmit={handleSubmit}>
           <FieldGroup>
             <Field>
-              <FieldLabel htmlFor="password">New Password</FieldLabel>
+              <FieldLabel htmlFor="password">
+                {t("auth.reset.password_label")}
+              </FieldLabel>
               <div className="relative">
                 <Input
                   id="password"
@@ -103,7 +107,7 @@ export function ResetPasswordConfirmForm({
 
             <Field>
               <FieldLabel htmlFor="confirmPassword">
-                Confirm Password
+                {t("auth.reset.confirm_password_label")}
               </FieldLabel>
               <div className="relative">
                 <Input
@@ -138,15 +142,18 @@ export function ResetPasswordConfirmForm({
               >
                 {resetPassword.isPending ? (
                   <>
-                    <Spinner /> Resetting...
+                    <Spinner /> {t("auth.reset.resetting")}
                   </>
                 ) : (
-                  "Reset Password"
+                  t("auth.reset.reset_button")
                 )}
               </Button>
 
               <FieldDescription className="text-center">
-                Go back to <Link to="/doctor/login">login</Link>
+                {t("auth.reset.back_to_login_pre")}{" "}
+                <Link to="/doctor/login">
+                  {t("auth.reset.back_to_login_link")}
+                </Link>
               </FieldDescription>
             </Field>
           </FieldGroup>

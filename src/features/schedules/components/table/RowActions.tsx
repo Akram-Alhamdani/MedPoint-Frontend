@@ -1,6 +1,7 @@
 import { IconEdit, IconTrash } from "@tabler/icons-react";
 import { Button } from "@/shared/components/ui/button";
 import type { Schedule } from "../../types";
+import { useTranslation } from "react-i18next";
 
 type RowActionsProps = {
   row: { original: Schedule };
@@ -15,13 +16,14 @@ function RowActions({
   onEdit,
   onDelete,
 }: RowActionsProps) {
+  const { t } = useTranslation();
   return (
     <div className="flex items-center">
       <Button
         variant="ghost"
         size="icon"
         className="cursor-pointer"
-        aria-label="Edit schedule"
+        aria-label={t("schedules.edit_schedule")}
         disabled={disableRowActions}
         onClick={() => onEdit(row.original)}
       >
@@ -31,7 +33,7 @@ function RowActions({
         variant="ghost"
         size="icon"
         className="cursor-pointer text-destructive hover:text-destructive"
-        aria-label="Delete schedule"
+        aria-label={t("schedules.delete_schedule")}
         disabled={disableRowActions}
         onClick={() => onDelete(row.original.id)}
       >

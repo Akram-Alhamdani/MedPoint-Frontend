@@ -31,6 +31,7 @@ import {
 import { Button } from "@/shared/components/ui/button";
 import type { WorkingHour } from "../../types";
 import buildColumns from "./Columns";
+import { useTranslation } from "react-i18next";
 
 const WorkingHoursTable = ({
   data,
@@ -43,6 +44,8 @@ const WorkingHoursTable = ({
   onEditClick?: (workingHour: WorkingHour) => void;
   onDeleteRequest?: (ids: number[]) => void;
 }) => {
+  const { t, i18n } = useTranslation();
+  const LTR = i18n.language === "en";
   const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
   const selectionCount = Object.values(rowSelection).filter(Boolean).length;
   const disableRowActions: boolean = selectionCount > 1;
@@ -53,8 +56,9 @@ const WorkingHoursTable = ({
         disableRowActions,
         onEdit: (workingHour) => onEditClick?.(workingHour),
         onDelete: (id) => onDeleteRequest?.([id]),
+        t,
       }),
-    [disableRowActions, onDeleteRequest, onEditClick],
+    [disableRowActions, onDeleteRequest, onEditClick, t],
   );
 
   const table: TableInstance<WorkingHour> = useReactTable({
@@ -79,11 +83,14 @@ const WorkingHoursTable = ({
   return (
     <>
       <div className="flex justify-end gap-2">
-        <div className="mr-auto">
+        <div className={`${LTR ? "mr-auto" : "ml-auto"}`}>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm" className="cursor-pointer">
-                <span className="hidden lg:inline">Actions</span>
+                <span className="hidden lg:inline">
+                  {t("working_hours.actions", "Actions")}
+                </span>
+
                 <IconChevronDown />
               </Button>
             </DropdownMenuTrigger>
@@ -101,7 +108,8 @@ const WorkingHoursTable = ({
                 <span>Delete Selected</span>
                 {hasSelection ? (
                   <span className="ml-auto text-xs text-muted-foreground">
-                    {selectedIds.length} selected
+                    {selectedIds.length}{" "}
+                    {t("working_hours.selected", "selected")}
                   </span>
                 ) : null}
               </DropdownMenuItem>
@@ -113,8 +121,12 @@ const WorkingHoursTable = ({
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className="cursor-pointer">
               <IconLayoutColumns />
-              <span className="hidden lg:inline">Customize Columns</span>
-              <span className="lg:hidden">Columns</span>
+              <span className="hidden lg:inline">
+                {t("working_hours.customize_columns", "Customize Columns")}
+              </span>
+              <span className="lg:hidden">
+                {t("working_hours.columns", "Columns")}
+              </span>
               <IconChevronDown />
             </Button>
           </DropdownMenuTrigger>
@@ -179,7 +191,7 @@ const WorkingHoursTable = ({
                     colSpan={columns.length}
                     className="h-24 text-center text-muted-foreground"
                   >
-                    No Working Hours found
+                    {t("working_hours.no_data", "No working hours available.")}
                   </TableCell>
                 </TableRow>
               )}

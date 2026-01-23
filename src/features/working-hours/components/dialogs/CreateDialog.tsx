@@ -1,4 +1,5 @@
-import { useState, type Dispatch, type SetStateAction } from "react";
+import { type Dispatch, type SetStateAction } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Dialog,
   DialogContent,
@@ -13,7 +14,6 @@ import { Label } from "@/shared/components/ui/label";
 import { toast } from "sonner";
 
 import type { WorkingHourPayload } from "../../types";
-import { buildUtcDateTime } from "../../utils";
 
 function CreateDialog({
   createDialogOpen,
@@ -28,15 +28,12 @@ function CreateDialog({
   setForm: Dispatch<SetStateAction<WorkingHourPayload>>;
   onWorkingHourCreate?: (payload: WorkingHourPayload) => void;
 }) {
-  const normalizeTime = (time: string) =>
-    time.length === 5 ? `${time}:00` : time;
-
-  const today = new Date().toISOString().slice(0, 10);
-  const [startDate, setStartDate] = useState(today);
-  const [endDate, setEndDate] = useState(today);
-
+  const { t, i18n } = useTranslation();
   const isCreateValid =
     !!form.start_time && !!form.end_time && form.patient_left > 0;
+  const isRTL =
+    i18n.language === "ar" ||
+    (typeof document !== "undefined" && document.dir === "rtl");
 
   return (
     <Dialog
@@ -49,16 +46,19 @@ function CreateDialog({
             end_time: "",
             patient_left: 1,
           });
-          setStartDate(today);
-          setEndDate(today);
         }
       }}
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create working hour</DialogTitle>
-          <DialogDescription>
-            Add a new working hour with date, time range, and patient capacity.
+          <DialogTitle className={isRTL ? "text-right mt-4" : ""}>
+            {t("working_hours.create_dialog.title", "Create working hour")}
+          </DialogTitle>
+          <DialogDescription className={`${isRTL ? "text-right" : ""} mb-3`}>
+            {t(
+              "working_hours.create_dialog.description",
+              "Add a new working hour with date, time range, and patient capacity.",
+            )}
           </DialogDescription>
         </DialogHeader>
 
@@ -68,72 +68,40 @@ function CreateDialog({
             e.preventDefault();
             if (!isCreateValid) return;
 
-            const startIso = buildUtcDateTime(
-              startDate,
-              normalizeTime(form.start_time),
-            );
-            const endIso = buildUtcDateTime(
-              endDate,
-              normalizeTime(form.end_time),
-            );
-            const now = new Date();
-
-            if (new Date(startIso) < now || new Date(endIso) < now) {
-              toast.error("Start and end times must be in the future.");
+            const start = form.start_time;
+            const end = form.end_time;
+            if (start && end && start >= end) {
+              toast.error(
+                t(
+                  "working_hours.create_dialog.invalid_time",
+                  "Start time must be less than end time.",
+                ),
+              );
               return;
             }
 
             onWorkingHourCreate?.({
               ...form,
-              start_time: startIso,
-              end_time: endIso,
             });
-
             setCreateDialogOpen(false);
             setForm({
               start_time: "",
               end_time: "",
               patient_left: 1,
             });
-            setStartDate(today);
-            setEndDate(today);
           }}
         >
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div className="space-y-1">
-              <Label htmlFor="start_date" className="mb-2">
-                Start date
-              </Label>
-              <Input
-                id="start_date"
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                required
-              />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="end_date" className="mb-2">
-                End date
-              </Label>
-              <Input
-                id="end_date"
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                required
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <div className="space-y-1">
               <Label htmlFor="start_time" className="mb-2">
-                Start time
+                {t(
+                  "working_hours.create_dialog.start_time",
+                  "Start date & time",
+                )}
               </Label>
               <Input
                 id="start_time"
-                type="time"
+                type="datetime-local"
                 value={form.start_time}
                 onChange={(e) =>
                   setForm((prev) => ({
@@ -146,11 +114,11 @@ function CreateDialog({
             </div>
             <div className="space-y-1">
               <Label htmlFor="end_time" className="mb-2">
-                End time
+                {t("working_hours.create_dialog.end_time", "End date & time")}
               </Label>
               <Input
                 id="end_time"
-                type="time"
+                type="datetime-local"
                 value={form.end_time}
                 onChange={(e) =>
                   setForm((prev) => ({
@@ -165,7 +133,7 @@ function CreateDialog({
 
           <div className="space-y-1">
             <Label htmlFor="patient_left" className="mb-2">
-              Patients left
+              {t("working_hours.create_dialog.patient_left", "Patients left")}
             </Label>
             <Input
               id="patient_left"
@@ -189,14 +157,14 @@ function CreateDialog({
               className="cursor-pointer"
               onClick={() => setCreateDialogOpen(false)}
             >
-              Cancel
+              {t("working_hours.create_dialog.cancel", "Cancel")}
             </Button>
             <Button
               type="submit"
               className="cursor-pointer"
               disabled={!isCreateValid}
             >
-              Create
+              {t("working_hours.create_dialog.create", "Create")}
             </Button>
           </DialogFooter>
         </form>

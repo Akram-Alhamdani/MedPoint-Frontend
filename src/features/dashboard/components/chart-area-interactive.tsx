@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 
+import { useTranslation } from "react-i18next";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import {
   Card,
@@ -32,19 +33,21 @@ import {
 
 export const description = "An interactive area chart";
 
-const chartConfig = {
-  visitors: {
-    label: "Total Patients",
-  },
-  male: {
-    label: "Male",
-    color: "var(--primary)",
-  },
-  female: {
-    label: "Female",
-    color: "var(--primary)",
-  },
-} satisfies ChartConfig;
+function getChartConfig(t: any) {
+  return {
+    visitors: {
+      label: t("dashboard.chart.title"),
+    },
+    male: {
+      label: t("dashboard.chart.male"),
+      color: "var(--primary)",
+    },
+    female: {
+      label: t("dashboard.chart.female"),
+      color: "var(--primary)",
+    },
+  } satisfies ChartConfig;
+}
 
 export function ChartAreaInteractive(patients_summary: {
   chartData: Array<{
@@ -53,12 +56,13 @@ export function ChartAreaInteractive(patients_summary: {
     F: number;
   }>;
 }) {
+  const { t, i18n } = useTranslation();
   const isMobile = useIsMobile();
   const [timeRange, setTimeRange] = React.useState("90d");
   const rangeLabels: Record<string, string> = {
-    "90d": "Last 3 months",
-    "30d": "Last 30 days",
-    "7d": "Last 7 days",
+    "90d": t("dashboard.chart.range_90d"),
+    "30d": t("dashboard.chart.range_30d"),
+    "7d": t("dashboard.chart.range_7d"),
   };
   const genderData = React.useMemo(
     () =>
@@ -67,7 +71,7 @@ export function ChartAreaInteractive(patients_summary: {
         male: M,
         female: F,
       })),
-    []
+    [patients_summary.chartData],
   );
 
   React.useEffect(() => {
@@ -90,16 +94,24 @@ export function ChartAreaInteractive(patients_summary: {
     return date >= startDate;
   });
 
+  const chartConfig = getChartConfig(t);
+
   return (
     <Card className="@container/card">
       <CardHeader>
-        <CardTitle>Total Patients</CardTitle>
+        <CardTitle>{t("dashboard.chart.title")}</CardTitle>
         <CardDescription>
           <span className="hidden @[540px]/card:block">
-            {`Total for the ${rangeLabels[timeRange] ?? "selected range"}`}
+            {t("dashboard.chart.description_full", {
+              range:
+                rangeLabels[timeRange] ??
+                t("dashboard.chart.description_short", { range: timeRange }),
+            })}
           </span>
           <span className="@[540px]/card:hidden">
-            {rangeLabels[timeRange] ?? "Selected range"}
+            {t("dashboard.chart.description_short", {
+              range: rangeLabels[timeRange] ?? timeRange,
+            })}
           </span>
         </CardDescription>
         <CardAction>
@@ -110,9 +122,15 @@ export function ChartAreaInteractive(patients_summary: {
             variant="outline"
             className="hidden *:data-[slot=toggle-group-item]:px-4! @[767px]/card:flex"
           >
-            <ToggleGroupItem value="90d">Last 3 months</ToggleGroupItem>
-            <ToggleGroupItem value="30d">Last 30 days</ToggleGroupItem>
-            <ToggleGroupItem value="7d">Last 7 days</ToggleGroupItem>
+            <ToggleGroupItem value="90d">
+              {t("dashboard.chart.range_90d")}
+            </ToggleGroupItem>
+            <ToggleGroupItem value="30d">
+              {t("dashboard.chart.range_30d")}
+            </ToggleGroupItem>
+            <ToggleGroupItem value="7d">
+              {t("dashboard.chart.range_7d")}
+            </ToggleGroupItem>
           </ToggleGroup>
           <Select value={timeRange} onValueChange={setTimeRange}>
             <SelectTrigger
@@ -120,17 +138,17 @@ export function ChartAreaInteractive(patients_summary: {
               size="sm"
               aria-label="Select a value"
             >
-              <SelectValue placeholder="Last 3 months" />
+              <SelectValue placeholder={t("dashboard.chart.range_90d")} />
             </SelectTrigger>
             <SelectContent className="rounded-xl">
               <SelectItem value="90d" className="rounded-lg">
-                Last 3 months
+                {t("dashboard.chart.range_90d")}
               </SelectItem>
               <SelectItem value="30d" className="rounded-lg">
-                Last 30 days
+                {t("dashboard.chart.range_30d")}
               </SelectItem>
               <SelectItem value="7d" className="rounded-lg">
-                Last 7 days
+                {t("dashboard.chart.range_7d")}
               </SelectItem>
             </SelectContent>
           </Select>
@@ -177,10 +195,13 @@ export function ChartAreaInteractive(patients_summary: {
               minTickGap={32}
               tickFormatter={(value) => {
                 const date = new Date(value);
-                return date.toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                });
+                return date.toLocaleDateString(
+                  i18n.language === "ar" ? "ar-EG" : "en-US",
+                  {
+                    month: "short",
+                    day: "numeric",
+                  },
+                );
               }}
             />
             <ChartTooltip
@@ -188,10 +209,13 @@ export function ChartAreaInteractive(patients_summary: {
               content={
                 <ChartTooltipContent
                   labelFormatter={(value) => {
-                    return new Date(value).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                    });
+                    return new Date(value).toLocaleDateString(
+                      i18n.language === "ar" ? "ar-EG" : "en-US",
+                      {
+                        month: "short",
+                        day: "numeric",
+                      },
+                    );
                   }}
                   indicator="dot"
                 />

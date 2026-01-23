@@ -1,0 +1,289 @@
+{
+  "header": {
+    "profile": "Profile",
+    "settings": "Settings"
+  },
+  "theme": {
+    "toggle": "Toggle theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "appointments": "Appointments",
+    "schedule": "Schedule",
+    "working_hours": "Working Hours",
+    "profile": "Profile",
+    "logout": "Logout"
+  },
+  "profile": {
+    "failed_to_update_profile": "Failed to update profile",
+    "update_success": "Profile updated successfully",
+    "verify_account": {
+      "title": "Account isn't Verified",
+      "description": " Please Upload your documents to get verified and start accepting patients.",
+      "upload_button": "Upload Documents",
+      "uploading": "Uploading...",
+      "upload_success": "Documents uploaded successfully",
+      "upload_failed": "Failed to upload documents. Please try again."
+    },
+    "pending_verification": {
+      "title": "Verification Pending",
+      "description": "Your documents are under review. We will notify you once your account is verified."
+    },
+    "rating_not_available": "Rating not available yet",
+    "basic_details_form": {
+      "title": "Basic Details",
+      "description": "Personal details patients see first.",
+      "email": "Email",
+      "full_name": "Full Name",
+      "dob": "Date of Birth",
+      "gender": {
+        "label": "Gender",
+        "male": "Male",
+        "female": "Female"
+      },
+      "address_line_1": "Address Line 1",
+      "address_line_2": "Address Line 2"
+    },
+    "professional_details_form": {
+      "title": "Professional Details",
+      "description": "Show what you do best.",
+      "speciality": {
+        "label": "Speciality"
+      },
+      "consultation_fee": "Consultation Fee (USD)",
+      "experience_years": "Years of Experience",
+      "education": "Education",
+      "about": "About You"
+    },
+    "footer": {
+      "title": "Visibility & actions",
+      "description": "Save changes to update what patients and staff see.",
+      "actions": {
+        "save": "Save Changes",
+        "saving": "Saving...",
+        "reset": "Reset"
+      }
+    }
+  },
+  "auth": {
+    "signup": {
+      "title": "Create your account",
+      "description": "Enter your email below to create your account",
+      "full_name_label": "Full Name",
+      "email_label": "Email",
+      "password_label": "Password",
+      "confirm_password_label": "Confirm Password",
+      "password_min_length": "Password must be at least 8 characters long",
+      "password_complexity": "Password must include at least one uppercase letter, one lowercase letter, one number, and one special character",
+      "passwords_no_match": "Passwords do not match",
+      "password_hint": "Must be at least 8 characters long.",
+      "creating_account": "Creating Account",
+      "create_account_button": "Create Account",
+      "already_have_account": "Already have an account?",
+      "login_link": "Log in",
+      "failed": "Registration failed. Please try again.",
+      "user_exists": "User with this email already exists."
+    },
+    "login": {
+      "title": "Login to your account",
+      "description": "Enter your email below to login to your account",
+      "email_label": "Email",
+      "password_label": "Password",
+      "forgot_password": "Forgot your Password?",
+      "password_min_length": "Password must be at least 8 characters long",
+      "logging_in": "Logging in",
+      "login_button": "Login",
+      "no_account": "Don't have an account?",
+      "signup_link": "Sign up",
+      "only_doctors": "Only doctors are allowed",
+      "invalid_credentials": "Invalid email or password",
+      "success": "Logged in successfully"
+    },
+    "forgot_password": {
+      "title": "Forgot Password",
+      "description": "Enter your email below to reset your password",
+      "email_label": "Email",
+      "sending": "Sending reset email",
+      "send_button": "Send Reset Email",
+      "back_to_login": "Go back to login",
+      "failed": "Failed to send password reset request. Please try again."
+    },
+    "otp": {
+      "title_reset": "Reset your password",
+      "title_verify": "Verify your email",
+      "description": "We sent a 6-digit code to your email.",
+      "code_label": "Verification code",
+      "code_description": "Enter the 6-digit code sent to your email.",
+      "verifying": "Verifying...",
+      "verify_button": "Verify",
+      "resent_success": "OTP resent successfully.",
+      "resending": "Resending...",
+      "resend": "Resend",
+      "resend_failed": "Failed to resend verification code. Please try again.",
+      "invalid_or_expired": "Invalid OTP or expired. Please request a new one.",
+      "verified": "Email verified successfully! You can now log in."
+    },
+    "reset": {
+      "title": "Reset your password",
+      "description": "Enter your new password below",
+      "password_label": "New Password",
+      "confirm_password_label": "Confirm Password",
+      "resetting": "Resetting...",
+      "reset_button": "Reset Password",
+      "back_to_login_pre": "Go back to",
+      "back_to_login_link": "login",
+      "success": "Password was reset successfully!",
+      "failed": "Password reset failed"
+    },
+    "logout": {
+      "success": "Logged out successfully"
+    }
+  },
+  "dashboard": {
+    "total_earnings": "Total Earnings",
+    "total_patients": "Total Patients",
+    "total_appointments": "Total Appointments",
+    "earnings_last_month": "Earnings for the last month",
+    "patients_current_month": "Patients for the current month",
+    "active_patients": "Active patients",
+    "patients_under_care": "Patients under care",
+    "appointments_this_month": "Appointments this month",
+    "scheduled_this_month": "Scheduled this month",
+    "chart": {
+      "title": "Total Patients",
+      "description_full": "Total for the {{range}}",
+      "description_short": "{{range}}",
+      "range_90d": "Last 3 months",
+      "range_30d": "Last 30 days",
+      "range_7d": "Last 7 days",
+      "male": "Male",
+      "female": "Female"
+    }
+  },
+  "appointments": {
+    "patient": "Patient",
+    "age": "Age",
+    "date_time": "Date & Time",
+    "status": "Status",
+    "payment": "Payment",
+    "fees": "Fees",
+    "actions": "Actions",
+    "online": "Online",
+    "cash": "Cash",
+    "complete": "Complete",
+    "cancel": "Cancel",
+    "customize_columns": "Customize Columns",
+    "columns": "Columns",
+    "no_appointments_found": "No appointments found",
+    "status_pending": "Pending",
+    "status_done": "Done",
+    "status_cancelled": "Cancelled"
+  },
+  "schedules": {
+    "select_all": "Select all",
+    "select_row": "Select row",
+    "day": "Day",
+    "start_time": "Start Time",
+    "end_time": "End Time",
+    "max_patients": "Max Patients",
+    "actions": "Actions",
+    "edit_schedule": "Edit schedule",
+    "delete_schedule": "Delete schedule",
+    "actions_menu": "Actions",
+    "delete_selected": "Delete Selected",
+    "selected": "selected",
+    "customize_columns": "Customize Columns",
+    "columns": "Columns",
+    "column": "Column",
+    "new_schedule": "New Schedule",
+    "no_schedules_found": "No schedules found",
+
+    "create_dialog": {
+      "title": "Create schedule",
+      "description": "Set the day, working hours, and maximum patients for this schedule.",
+      "select_day": "Select a day",
+      "cancel": "Cancel",
+      "create": "Create",
+      "invalid_time": "Start time must be less than end time.",
+      "create_success": "Schedule created successfully",
+      "create_failed": "Failed to create schedule. Please try again."
+    },
+    "update_dialog": {
+      "title": "Update schedule",
+      "description": "Modify day, time range, or max patients for this schedule.",
+      "select_day": "Select a day",
+      "cancel": "Cancel",
+      "save": "Save changes",
+      "update_success": "Schedule updated successfully",
+      "update_failed": "Failed to update schedule. Please try again."
+    },
+    "delete_dialog": {
+      "title": "Delete selected schedules?",
+      "description": "This will remove {{count}} schedule. This action cannot be undone.",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "delete_success": "Schedule deleted successfully",
+      "delete_failed": "Failed to delete schedule. Please try again"
+    },
+
+    "fetch_failed": "Failed to fetch schedules data",
+    "unexpected_error": "An unexpected error occurred",
+    "days": {
+      "sat": "Saturday",
+      "sun": "Sunday",
+      "mon": "Monday",
+      "tue": "Tuesday",
+      "wed": "Wednesday",
+      "thu": "Thursday",
+      "fri": "Friday"
+    }
+  },
+  "working_hours": {
+    "select_all": "Select all",
+    "select_row": "Select row",
+    "start_time": "Start date & time",
+    "end_time": "End date & time",
+    "patient_left": "Patients left",
+    "actions": "Actions",
+    "no_data": "No working hours available.",
+    "create_success": "Working hour created successfully",
+    "create_failed": "Failed to create working hour. Please try again.",
+    "fetch_failed": "Failed to fetch working hours data",
+    "unexpected_error": "An unexpected error occurred",
+    "delete_success": "Working hour deleted successfully",
+    "delete_failed": "Failed to delete working hour. Please try again.",
+    "update_success": "Working hour updated successfully",
+    "update_failed": "Failed to update working hour. Please try again.",
+    "update_dialog": {
+      "title": "Update working hour",
+      "description": "Modify date, time range, or patients left for this working hour.",
+      "cancel": "Cancel",
+      "save": "Save changes"
+    },
+    "delete_dialog": {
+      "title": "Delete selected working hours?",
+      "description": "This will remove {{count}} working hour{{plural}}. This action cannot be undone.",
+      "cancel": "Cancel",
+      "delete": "Delete"
+    },
+    "customize_columns": "Customize Columns",
+    "create_dialog": {
+      "title": "Create working hour",
+      "description": "Add a new working hour with date, time range, and patient capacity.",
+      "start_time": "Start date & time",
+      "end_time": "End date & time",
+      "patient_left": "Patients left",
+      "cancel": "Cancel",
+      "create": "Create",
+      "invalid_time": "Start time must be less than end time."
+    }
+  },
+  "pagination": {
+    "page": "Page {{page}} of {{total}}",
+    "rows_per_page": "Rows per page"
+  }
+}

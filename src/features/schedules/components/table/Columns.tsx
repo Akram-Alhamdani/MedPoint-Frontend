@@ -10,11 +10,13 @@ type BuildColumnsArgs = {
   onDelete: (id: number) => void;
 };
 
+type BuildColumnsArgsWithT = BuildColumnsArgs & { t: (key: string) => string };
 const buildColumns = ({
   disableRowActions,
   onEdit,
   onDelete,
-}: BuildColumnsArgs): ColumnDef<Schedule>[] => [
+  t,
+}: BuildColumnsArgsWithT): ColumnDef<Schedule>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -25,7 +27,7 @@ const buildColumns = ({
             (table.getIsSomePageRowsSelected() && "indeterminate")
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
+          aria-label={t("schedules.select_all")}
         />
       </div>
     ),
@@ -34,7 +36,7 @@ const buildColumns = ({
         <Checkbox
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
+          aria-label={t("schedules.select_row")}
         />
       </div>
     ),
@@ -42,27 +44,40 @@ const buildColumns = ({
     enableHiding: false,
   },
   {
-    header: "Day",
+    header: t("schedules.day"),
     enableHiding: false,
-    cell: ({ row }) => row.original.day,
+    cell: ({ row }) => {
+      const dayKey = row.original.day?.toLowerCase();
+      // Map SAT/SUN/... to schedules.days.sat, etc.
+      const dayMap: Record<string, string> = {
+        sat: t("schedules.days.sat"),
+        sun: t("schedules.days.sun"),
+        mon: t("schedules.days.mon"),
+        tue: t("schedules.days.tue"),
+        wed: t("schedules.days.wed"),
+        thu: t("schedules.days.thu"),
+        fri: t("schedules.days.fri"),
+      };
+      return dayMap[dayKey] || row.original.day;
+    },
   },
   {
-    header: "Start Time",
+    header: t("schedules.start_time"),
     enableHiding: false,
     cell: ({ row }) => formatTime(row.original.start_time),
   },
   {
-    header: "End Time",
+    header: t("schedules.end_time"),
     enableHiding: false,
     cell: ({ row }) => formatTime(row.original.end_time),
   },
   {
-    header: "Max Patients",
+    header: t("schedules.max_patients"),
     enableHiding: true,
     cell: ({ row }) => row.original.max_patients,
   },
   {
-    header: "Actions",
+    header: t("schedules.actions"),
     enableHiding: false,
     cell: ({ row }) => (
       <RowActions

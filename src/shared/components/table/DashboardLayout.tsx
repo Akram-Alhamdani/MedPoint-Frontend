@@ -2,8 +2,11 @@ import { AppSidebar } from "./sidebar/app-sidebar";
 import { SiteHeader } from "./header/site-header";
 import { SidebarInset, SidebarProvider } from "@/shared/components/ui/sidebar";
 import { Outlet } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export default function DashboardLayout() {
+  const { i18n } = useTranslation();
+  const side = i18n.language === "ar" ? "right" : "left";
   return (
     <SidebarProvider
       style={
@@ -13,7 +16,7 @@ export default function DashboardLayout() {
         } as React.CSSProperties
       }
     >
-      <AppSidebar variant="inset" />
+      <AppSidebar variant="inset" side={side} />
       <SidebarInset>
         <SiteHeader />
         <div className="flex flex-1 flex-col">

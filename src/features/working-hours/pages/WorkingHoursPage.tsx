@@ -12,7 +12,7 @@ import CreateDialog from "../components/dialogs/CreateDialog";
 import UpdateDialog from "../components/dialogs/UpdateDialog";
 import DeleteDialog from "../components/dialogs/DeleteDialog";
 import type { WorkingHourPayload, WorkingHour } from "../types";
-import { extractDatePart, toInputTime } from "../utils";
+import { extractDatePart, toInputDateTime } from "../utils";
 
 const WorkingHoursPage = () => {
   // Pagination state
@@ -48,8 +48,8 @@ const WorkingHoursPage = () => {
   const handleEditRequest = (workingHour: WorkingHour) => {
     setEditId(workingHour.id);
     setForm({
-      start_time: toInputTime(workingHour.start_time),
-      end_time: toInputTime(workingHour.end_time),
+      start_time: toInputDateTime(workingHour.start_time),
+      end_time: toInputDateTime(workingHour.end_time),
       patient_left: workingHour.patient_left,
     });
     setEditStartDate(extractDatePart(workingHour.start_time));

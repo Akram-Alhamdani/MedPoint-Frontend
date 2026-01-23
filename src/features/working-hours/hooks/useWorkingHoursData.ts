@@ -3,8 +3,10 @@ import { toast } from "sonner";
 
 import { getWorkingHoursData } from "../api";
 import type { WorkingHoursResponse } from "../types";
+import { useTranslation } from "react-i18next";
 
 export function useWorkingHoursData(pageNumber: number, pageSize: number) {
+  const { t } = useTranslation();
   return useQuery<WorkingHoursResponse>({
     queryKey: ["working-hours", pageNumber, pageSize],
     queryFn: async () => {
@@ -13,10 +15,10 @@ export function useWorkingHoursData(pageNumber: number, pageSize: number) {
           pageNumber,
           pageSize,
         );
-        if (status !== 200) throw new Error("Failed to fetch working hours");
+        if (status !== 200) throw new Error(t("working_hours.fetch_failed"));
         return data;
       } catch (error: any) {
-        toast.error(error.message || "An unexpected error occurred");
+        toast.error(t("working_hours.unexpected_error"));
         throw error;
       }
     },

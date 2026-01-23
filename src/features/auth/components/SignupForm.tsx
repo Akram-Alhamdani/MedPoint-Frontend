@@ -19,12 +19,15 @@ import { Eye, EyeOff } from "lucide-react";
 import { useRegister } from "../hooks/useRegister"; // your custom hook
 import { toast } from "sonner";
 import { Spinner } from "@/shared/components/ui/spinner";
+import { useTranslation } from "react-i18next";
 
 export function SignupForm({
   onSuccess,
 }: {
   onSuccess: (email: string) => void;
 }) {
+  const { t, i18n } = useTranslation();
+  const irRTL = i18n.language === "ar";
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -41,18 +44,16 @@ export function SignupForm({
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/;
 
     if (password.length < 8) {
-      toast.error("Password must be at least 8 characters long");
+      toast.error(t("auth.signup.password_min_length"));
       return;
     }
     if (!complexityRegex.test(password)) {
-      toast.error(
-        "Password must include at least one uppercase letter, one lowercase letter, one number, and one special character"
-      );
+      toast.error(t("auth.signup.password_complexity"));
       return;
     }
 
     if (password !== confirmPassword) {
-      toast.error("Passwords do not match");
+      toast.error(t("auth.signup.passwords_no_match"));
       return;
     }
 
@@ -62,23 +63,23 @@ export function SignupForm({
         onSuccess: () => {
           onSuccess(email);
         },
-      }
+      },
     );
   };
 
   return (
     <Card className="shadow-md">
       <CardHeader className="text-center">
-        <CardTitle className="text-xl">Create your account</CardTitle>
-        <CardDescription>
-          Enter your email below to create your account
-        </CardDescription>
+        <CardTitle className="text-xl">{t("auth.signup.title")}</CardTitle>
+        <CardDescription>{t("auth.signup.description")}</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit}>
           <FieldGroup className="gap-4">
             <Field>
-              <FieldLabel htmlFor="name">Full Name</FieldLabel>
+              <FieldLabel htmlFor="name">
+                {t("auth.signup.full_name_label")}
+              </FieldLabel>
               <Input
                 id="name"
                 type="text"
@@ -89,7 +90,9 @@ export function SignupForm({
             </Field>
 
             <Field>
-              <FieldLabel htmlFor="email">Email</FieldLabel>
+              <FieldLabel htmlFor="email">
+                {t("auth.signup.email_label")}
+              </FieldLabel>
               <Input
                 id="email"
                 type="email"
@@ -101,7 +104,9 @@ export function SignupForm({
 
             <Field className="grid grid-cols-2 gap-4">
               <Field>
-                <FieldLabel htmlFor="password">Password</FieldLabel>
+                <FieldLabel htmlFor="password">
+                  {t("auth.signup.password_label")}
+                </FieldLabel>
                 <div className="relative">
                   <Input
                     id="password"
@@ -129,7 +134,7 @@ export function SignupForm({
 
               <Field>
                 <FieldLabel htmlFor="confirm-password">
-                  Confirm Password
+                  {t("auth.signup.confirm_password_label")}
                 </FieldLabel>
                 <div className="relative">
                   <Input
@@ -157,8 +162,8 @@ export function SignupForm({
               </Field>
             </Field>
 
-            <FieldDescription>
-              Must be at least 8 characters long.
+            <FieldDescription className={irRTL ? "text-right" : "text-left"}>
+              {t("auth.signup.password_hint")}
             </FieldDescription>
             <Field>
               <Button
@@ -168,14 +173,15 @@ export function SignupForm({
               >
                 {register.isPending ? (
                   <>
-                    <Spinner /> Creating Account
+                    <Spinner /> {t("auth.signup.creating_account")}
                   </>
                 ) : (
-                  "Create Account"
+                  t("auth.signup.create_account_button")
                 )}
               </Button>
               <FieldDescription className="text-center">
-                Already have an account? <Link to="/doctor/login">Log in</Link>
+                {t("auth.signup.already_have_account")}{" "}
+                <Link to="/doctor/login">{t("auth.signup.login_link")}</Link>
               </FieldDescription>
             </Field>
           </FieldGroup>

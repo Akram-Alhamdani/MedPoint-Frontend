@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   flexRender,
   getCoreRowModel,
@@ -46,6 +47,8 @@ const SchedulesTable = ({
   const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
   const selectionCount = Object.values(rowSelection).filter(Boolean).length;
   const disableRowActions: boolean = selectionCount > 1;
+  const { t, i18n } = useTranslation();
+  const LTR = i18n.dir() === "ltr";
 
   const columns: ColumnDef<Schedule>[] = useMemo(
     () =>
@@ -53,8 +56,9 @@ const SchedulesTable = ({
         disableRowActions,
         onEdit: (schedule) => onEditClick?.(schedule),
         onDelete: (id) => onDeleteRequest?.([id]),
+        t,
       }),
-    [disableRowActions, onDeleteRequest, onEditClick],
+    [disableRowActions, onDeleteRequest, onEditClick, t],
   );
 
   const table: TableInstance<Schedule> = useReactTable({
@@ -78,16 +82,18 @@ const SchedulesTable = ({
   return (
     <>
       <div className="flex justify-end gap-2">
-        <div className="mr-auto">
+        <div className={`${LTR ? "mr-auto" : "ml-auto"}`}>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm" className="cursor-pointer">
-                <span className="hidden lg:inline">Actions</span>
+                <span className="hidden lg:inline">
+                  {t("schedules.actions_menu", "Actions")}
+                </span>
                 <IconChevronDown />
               </Button>
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent align="start" className="w-56">
+            <DropdownMenuContent align={LTR ? "start" : "end"} className="w-56">
               <DropdownMenuItem
                 className="cursor-pointer"
                 variant="destructive"
@@ -97,10 +103,10 @@ const SchedulesTable = ({
                 }}
               >
                 <IconTrash />
-                <span>Delete Selected</span>
+                <span>{t("schedules.delete_selected", "Delete Selected")}</span>
                 {hasSelection ? (
                   <span className="ml-auto text-xs text-muted-foreground">
-                    {selectedIds.length} selected
+                    {selectedIds.length} {t("schedules.selected", "selected")}
                   </span>
                 ) : null}
               </DropdownMenuItem>
@@ -112,13 +118,17 @@ const SchedulesTable = ({
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className="cursor-pointer">
               <IconLayoutColumns />
-              <span className="hidden lg:inline">Customize Columns</span>
-              <span className="lg:hidden">Columns</span>
+              <span className="hidden lg:inline">
+                {t("schedules.customize_columns", "Customize Columns")}
+              </span>
+              <span className="lg:hidden">
+                {t("schedules.columns", "Columns")}
+              </span>
               <IconChevronDown />
             </Button>
           </DropdownMenuTrigger>
 
-          <DropdownMenuContent align="end" className="w-56">
+          <DropdownMenuContent align={LTR ? "start" : "end"} className="w-56">
             {table
               .getAllColumns()
               .filter((column) => column.getCanHide())
@@ -131,14 +141,13 @@ const SchedulesTable = ({
                 >
                   {typeof column.columnDef.header === "string"
                     ? column.columnDef.header
-                    : "Column"}{" "}
+                    : t("schedules.column", "Column")}{" "}
                 </DropdownMenuCheckboxItem>
               ))}
           </DropdownMenuContent>
         </DropdownMenu>
         <Button size="sm" className="cursor-pointer" onClick={onCreateClick}>
           <IconPlus />
-          <span className="hidden sm:inline">New Schedule</span>
         </Button>
       </div>
       <div className="rounded-lg border bg-card">
@@ -179,7 +188,7 @@ const SchedulesTable = ({
                     colSpan={columns.length}
                     className="h-24 text-center text-muted-foreground"
                   >
-                    No schedules found
+                    {t("schedules.no_schedules_found", "No schedules found")}
                   </TableCell>
                 </TableRow>
               )}

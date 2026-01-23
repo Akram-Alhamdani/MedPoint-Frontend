@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { SignupForm } from "../components/SignupForm";
 import { OTPForm } from "@/features/auth/components/OTPForm";
+import { useTranslation } from "react-i18next";
 
 type Step = "FORM" | "OTP";
 
 export function SignupPage() {
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.language === "ar";
   const [step, setStep] = useState<Step>("FORM");
   const [email, setEmail] = useState("");
 
@@ -26,7 +29,7 @@ export function SignupPage() {
     return (
       <div className="bg-muted flex min-h-svh w-full items-center justify-center p-6 md:p-10">
         <div className="w-full max-w-xs">
-          <OTPForm email={email} />
+          <OTPForm email={email} t={t} isRTL={isRTL} />
         </div>
       </div>
     );

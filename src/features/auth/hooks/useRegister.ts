@@ -2,11 +2,13 @@ import { useMutation } from "@tanstack/react-query";
 import { registerAPI } from "../services/api";
 import { toast } from "sonner";
 import type { RegisterPayload } from "../types";
+import { useTranslation } from "react-i18next";
 
 /* ---------------------------------- */
 /* REGISTER                           */
 /* ---------------------------------- */
 export const useRegister = () => {
+  const { t } = useTranslation();
   return useMutation<any, Error, RegisterPayload>({
     mutationFn: async (payload) => {
       try {
@@ -16,8 +18,11 @@ export const useRegister = () => {
         const data = error.response?.data;
         if (data?.email) throw new Error(data?.email);
         else if (data?.password) throw new Error(data?.password);
-        else if (data?.message) throw new Error(data?.message);
-        else throw new Error("Registration failed. Please try again.");
+        else if (data?.message) {
+          if (data?.message.startsWith("User")) {
+            throw new Error(t("auth.signup.user_exists"));
+          }
+        } else throw new Error(t("auth.signup.failed"));
       }
     },
 

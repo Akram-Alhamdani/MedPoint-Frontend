@@ -17,6 +17,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/ui/select";
+
+import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 import type { CreateSchedulePayload } from "../../types";
 
 function UpdateDialog({
@@ -36,21 +39,24 @@ function UpdateDialog({
   setForm: Dispatch<SetStateAction<CreateSchedulePayload>>;
   onScheduleUpdate?: (id: number, data: CreateSchedulePayload) => void;
 }) {
+  const { t, i18n } = useTranslation();
   const normalizeTime = (time: string) =>
     time.length === 5 ? `${time}:00` : time;
 
   const dayOptions = [
-    { value: "SAT", label: "Saturday" },
-    { value: "SUN", label: "Sunday" },
-    { value: "MON", label: "Monday" },
-    { value: "TUE", label: "Tuesday" },
-    { value: "WED", label: "Wednesday" },
-    { value: "THU", label: "Thursday" },
-    { value: "FRI", label: "Friday" },
+    { value: "SAT", label: t("schedules.days.sat", "Saturday") },
+    { value: "SUN", label: t("schedules.days.sun", "Sunday") },
+    { value: "MON", label: t("schedules.days.mon", "Monday") },
+    { value: "TUE", label: t("schedules.days.tue", "Tuesday") },
+    { value: "WED", label: t("schedules.days.wed", "Wednesday") },
+    { value: "THU", label: t("schedules.days.thu", "Thursday") },
+    { value: "FRI", label: t("schedules.days.fri", "Friday") },
   ];
-
   const isEditValid =
     !!form.day && !!form.start_time && !!form.end_time && form.max_patients > 0;
+  const isRTL =
+    i18n.language === "ar" ||
+    (typeof document !== "undefined" && document.dir === "rtl");
   return (
     <Dialog
       open={editDialogOpen}
@@ -68,18 +74,35 @@ function UpdateDialog({
       }}
     >
       <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Update schedule</DialogTitle>
-          <DialogDescription>
-            Modify day, time range, or max patients for this schedule.
+        <DialogHeader className={isRTL ? "text-right" : ""}>
+          <DialogTitle className={isRTL ? "text-right mt-6" : ""}>
+            {t("schedules.update_dialog.title", "Update schedule")}
+          </DialogTitle>
+          <DialogDescription className={isRTL ? "text-right" : ""}>
+            {t(
+              "schedules.update_dialog.description",
+              "Modify day, time range, or max patients for this schedule.",
+            )}
           </DialogDescription>
         </DialogHeader>
 
         <form
-          className="space-y-5"
+          className={isRTL ? "space-y-5 text-right" : "space-y-5"}
           onSubmit={(e) => {
             e.preventDefault();
             if (!isEditValid || editId == null) return;
+            // Check if start_time < end_time
+            const start = form.start_time;
+            const end = form.end_time;
+            if (start && end && start >= end) {
+              toast.error(
+                t(
+                  "schedules.create_dialog.invalid_time",
+                  "Start time must be less than end time.",
+                ),
+              );
+              return;
+            }
             onScheduleUpdate?.(editId, {
               ...form,
               start_time: normalizeTime(form.start_time),
@@ -97,7 +120,7 @@ function UpdateDialog({
         >
           <div className="space-y-1">
             <Label htmlFor="edit-day" className="mb-2">
-              Day
+              {t("schedules.day", "Day")}
             </Label>
             <Select
               value={form.day}
@@ -109,7 +132,12 @@ function UpdateDialog({
               }
             >
               <SelectTrigger id="edit-day">
-                <SelectValue placeholder="Select a day" />
+                <SelectValue
+                  placeholder={t(
+                    "schedules.update_dialog.select_day",
+                    "Select a day",
+                  )}
+                />
               </SelectTrigger>
               <SelectContent>
                 {dayOptions.map((day) => (
@@ -121,10 +149,16 @@ function UpdateDialog({
             </Select>
           </div>
 
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div
+            className={
+              isRTL
+                ? "grid grid-cols-1 gap-3 sm:grid-cols-2 text-right"
+                : "grid grid-cols-1 gap-3 sm:grid-cols-2"
+            }
+          >
             <div className="space-y-1">
               <Label htmlFor="edit-start_time" className="mb-2">
-                Start time
+                {t("schedules.start_time", "Start time")}
               </Label>
               <Input
                 id="edit-start_time"
@@ -141,7 +175,7 @@ function UpdateDialog({
             </div>
             <div className="space-y-1">
               <Label htmlFor="edit-end_time" className="mb-2">
-                End time
+                {t("schedules.end_time", "End time")}
               </Label>
               <Input
                 id="edit-end_time"
@@ -160,7 +194,7 @@ function UpdateDialog({
 
           <div className="space-y-1">
             <Label htmlFor="edit-max_patients" className="mb-2">
-              Max patients
+              {t("schedules.max_patients", "Max patients")}
             </Label>
             <Input
               id="edit-max_patients"
@@ -177,21 +211,21 @@ function UpdateDialog({
             />
           </div>
 
-          <DialogFooter>
+          <DialogFooter className={isRTL ? "flex-row-reverse" : ""}>
             <Button
               type="button"
               variant="outline"
               className="cursor-pointer"
               onClick={() => setEditDialogOpen(false)}
             >
-              Cancel
+              {t("schedules.update_dialog.cancel", "Cancel")}
             </Button>
             <Button
               type="submit"
               className="cursor-pointer"
               disabled={!isEditValid || editId == null}
             >
-              Save changes
+              {t("schedules.update_dialog.save", "Save changes")}
             </Button>
           </DialogFooter>
         </form>

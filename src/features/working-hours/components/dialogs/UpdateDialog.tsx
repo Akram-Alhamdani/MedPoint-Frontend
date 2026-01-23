@@ -1,4 +1,5 @@
-import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import { type Dispatch, type SetStateAction } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Dialog,
   DialogContent,
@@ -13,7 +14,6 @@ import { Label } from "@/shared/components/ui/label";
 import { toast } from "sonner";
 
 import type { WorkingHourPayload } from "../../types";
-import { buildUtcDateTime } from "../../utils";
 
 function UpdateDialog({
   editDialogOpen,
@@ -23,8 +23,6 @@ function UpdateDialog({
   form,
   setForm,
   onWorkingHourUpdate,
-  baseStartDate,
-  baseEndDate,
 }: {
   editDialogOpen: boolean;
   setEditDialogOpen: (open: boolean) => void;
@@ -36,20 +34,14 @@ function UpdateDialog({
   baseStartDate?: string | null;
   baseEndDate?: string | null;
 }) {
-  const normalizeTime = (time: string) =>
-    time.length === 5 ? `${time}:00` : time;
-
-  const today = new Date().toISOString().slice(0, 10);
-  const [startDate, setStartDate] = useState(baseStartDate || today);
-  const [endDate, setEndDate] = useState(baseEndDate || today);
-
-  useEffect(() => {
-    setStartDate(baseStartDate || today);
-    setEndDate(baseEndDate || today);
-  }, [baseStartDate, baseEndDate, editDialogOpen, today]);
+  const { t, i18n } = useTranslation();
+  const isRTL =
+    i18n.language === "ar" ||
+    (typeof document !== "undefined" && document.dir === "rtl");
 
   const isEditValid =
     !!form.start_time && !!form.end_time && form.patient_left > 0;
+
   return (
     <Dialog
       open={editDialogOpen}
@@ -67,9 +59,14 @@ function UpdateDialog({
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Update working hour</DialogTitle>
-          <DialogDescription>
-            Modify time range, or patients left for this working hour.
+          <DialogTitle className={isRTL ? "text-right mt-4" : ""}>
+            {t("working_hours.update_dialog.title", "Update working hour")}
+          </DialogTitle>
+          <DialogDescription className={`${isRTL ? "text-right" : ""} mb-3`}>
+            {t(
+              "working_hours.update_dialog.description",
+              "Modify date, time range, or patients left for this working hour.",
+            )}
           </DialogDescription>
         </DialogHeader>
 
@@ -79,25 +76,22 @@ function UpdateDialog({
             e.preventDefault();
             if (!isEditValid || editId == null) return;
 
-            const startIso = buildUtcDateTime(
-              startDate,
-              normalizeTime(form.start_time),
-            );
-            const endIso = buildUtcDateTime(
-              endDate,
-              normalizeTime(form.end_time),
-            );
-            const now = new Date();
-
-            if (new Date(startIso) < now || new Date(endIso) < now) {
-              toast.error("Start and end times must be in the future.");
+            if (
+              form.start_time &&
+              form.end_time &&
+              form.start_time >= form.end_time
+            ) {
+              toast.error(
+                t(
+                  "working_hours.create_dialog.invalid_time",
+                  "Start time must be less than end time.",
+                ),
+              );
               return;
             }
 
             onWorkingHourUpdate?.(editId, {
               ...form,
-              start_time: startIso,
-              end_time: endIso,
             });
             setEditDialogOpen(false);
             setEditId(null);
@@ -106,45 +100,19 @@ function UpdateDialog({
               end_time: "",
               patient_left: 1,
             });
-            setStartDate(today);
-            setEndDate(today);
           }}
         >
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div className="space-y-1">
-              <Label htmlFor="edit-start_date" className="mb-2">
-                Start date
-              </Label>
-              <Input
-                id="edit-start_date"
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                required
-              />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="edit-end_date" className="mb-2">
-                End date
-              </Label>
-              <Input
-                id="edit-end_date"
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                required
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <div className="space-y-1">
               <Label htmlFor="edit-start_time" className="mb-2">
-                Start time
+                {t(
+                  "working_hours.create_dialog.start_time",
+                  "Start date & time",
+                )}
               </Label>
               <Input
                 id="edit-start_time"
-                type="time"
+                type="datetime-local"
                 value={form.start_time}
                 onChange={(e) =>
                   setForm((prev) => ({
@@ -157,11 +125,11 @@ function UpdateDialog({
             </div>
             <div className="space-y-1">
               <Label htmlFor="edit-end_time" className="mb-2">
-                End time
+                {t("working_hours.create_dialog.end_time", "End date & time")}
               </Label>
               <Input
                 id="edit-end_time"
-                type="time"
+                type="datetime-local"
                 value={form.end_time}
                 onChange={(e) =>
                   setForm((prev) => ({
@@ -176,7 +144,7 @@ function UpdateDialog({
 
           <div className="space-y-1">
             <Label htmlFor="edit-patient_left" className="mb-2">
-              Patients left
+              {t("working_hours.create_dialog.patient_left", "Patients left")}
             </Label>
             <Input
               id="edit-patient_left"
@@ -193,21 +161,21 @@ function UpdateDialog({
             />
           </div>
 
-          <DialogFooter>
+          <DialogFooter className={isRTL ? "flex-row-reverse" : ""}>
             <Button
               type="button"
               variant="outline"
               className="cursor-pointer"
               onClick={() => setEditDialogOpen(false)}
             >
-              Cancel
+              {t("working_hours.update_dialog.cancel", "Cancel")}
             </Button>
             <Button
               type="submit"
               className="cursor-pointer"
               disabled={!isEditValid || editId == null}
             >
-              Save changes
+              {t("working_hours.update_dialog.save", "Save changes")}
             </Button>
           </DialogFooter>
         </form>

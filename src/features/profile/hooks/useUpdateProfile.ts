@@ -1,11 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import type { User } from "@/features/auth/types";
 import { updateDoctorProfile } from "../api";
 import type { DoctorProfile, UpdateDoctorProfilePayload } from "../types";
+import { useTranslation } from "react-i18next";
 
 export function useUpdateProfile() {
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
 
   const normalizePayload = (payload: UpdateDoctorProfilePayload) => {
     const normalized: UpdateDoctorProfilePayload = {};
@@ -60,7 +61,7 @@ export function useUpdateProfile() {
         const { data, status } = response;
 
         if (![200, 201].includes(status)) {
-          throw new Error("Failed to update profile");
+          throw new Error(t("error.failed_to_update_profile"));
         }
 
         return data;
@@ -69,7 +70,7 @@ export function useUpdateProfile() {
           error?.response?.data?.detail ||
           error?.response?.data?.message ||
           error?.message ||
-          "Failed to update profile";
+          t("error.failed_to_update_profile");
 
         throw new Error(message);
       }
@@ -78,21 +79,7 @@ export function useUpdateProfile() {
     onSuccess: (profile) => {
       queryClient.setQueryData(["doctor-profile"], profile);
 
-      const condensedUser: User = {
-        id: profile.id,
-        role: profile.role,
-        email: profile.email,
-        image: profile.image,
-        full_name: profile.full_name,
-        gender: profile.gender,
-        dob: profile.dob,
-      };
-
-      localStorage.setItem("user", JSON.stringify(condensedUser));
-      toast.success("Profile updated successfully");
-
-      // Force a full page reload to update sidebar image and all user info
-      window.location.reload();
+      toast.success(t("profile.update_success"));
     },
 
     onError: (error) => {
