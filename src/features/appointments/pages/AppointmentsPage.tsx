@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Spinner } from "@/shared/components/ui/spinner";
 
 import AppointmentsTable from "../components/table/Table";
+import CreateAppointmentDialog from "../components/dialogs/CreateAppointmentDialog";
 import AppointmentsTablePagination from "@/shared/components/Pagination";
 
 import {
@@ -15,6 +16,7 @@ const AppointmentsPage = () => {
   const [pageSize, setPageSize] = useState(5);
 
   const { data, isPending } = useAppointmentsData(pageNumber, pageSize);
+  const [createDialogOpen, setCreateDialogOpen] = useState(false);
 
   const { mutate: completeAppointment, isPending: isCompletePending } =
     useCompleteAppointment();
@@ -37,6 +39,7 @@ const AppointmentsPage = () => {
         isActionPending={isActionPending}
         onComplete={completeAppointment}
         onCancel={cancelAppointment}
+        onCreateClick={() => setCreateDialogOpen(true)}
       />
       <AppointmentsTablePagination
         pageNumber={pageNumber}
@@ -44,6 +47,10 @@ const AppointmentsPage = () => {
         totalPages={data?.total_pages ?? 1}
         onPageChange={setPageNumber}
         onPageSizeChange={setPageSize}
+      />
+      <CreateAppointmentDialog
+        createDialogOpen={createDialogOpen}
+        setCreateDialogOpen={setCreateDialogOpen}
       />
     </div>
   );

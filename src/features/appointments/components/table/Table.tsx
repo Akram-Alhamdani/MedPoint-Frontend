@@ -18,7 +18,11 @@ import {
   DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu";
 import { Button } from "@/shared/components/ui/button";
-import { IconChevronDown, IconLayoutColumns } from "@tabler/icons-react";
+import {
+  IconChevronDown,
+  IconLayoutColumns,
+  IconPlus,
+} from "@tabler/icons-react";
 import type { Appointment } from "../../types";
 import { appointmentColumns } from "./Columns";
 import { useTranslation } from "react-i18next";
@@ -28,6 +32,7 @@ type Props = {
   isActionPending: boolean;
   onComplete: (id: number) => void;
   onCancel: (id: number) => void;
+  onCreateClick?: () => void;
 };
 
 export default function AppointmentsTable({
@@ -35,6 +40,7 @@ export default function AppointmentsTable({
   isActionPending,
   onComplete,
   onCancel,
+  onCreateClick,
 }: Props) {
   const { t } = useTranslation();
   const table = useReactTable({
@@ -46,7 +52,7 @@ export default function AppointmentsTable({
 
   return (
     <>
-      <div className="flex justify-end">
+      <div className="flex justify-end gap-2">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm">
@@ -84,6 +90,9 @@ export default function AppointmentsTable({
               ))}
           </DropdownMenuContent>
         </DropdownMenu>
+        <Button size="sm" className="cursor-pointer" onClick={onCreateClick}>
+          <IconPlus />
+        </Button>
       </div>
       <div className="rounded-lg border bg-card">
         <div className="px-6 py-2">

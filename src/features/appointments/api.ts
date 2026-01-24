@@ -13,3 +13,17 @@ export const cancelAppointment = async (appointmentId: number) => {
 export const completeAppointment = async (appointmentId: number) => {
   await api.post(`/appointments/${appointmentId}/complete/`);
 };
+
+// Manual Create Appointment by Doctor
+
+export interface ManualCreateAppointmentPayload {
+  full_name: string;
+  email: string;
+  working_hours: number;
+}
+
+export const manualCreateAppointment = async (
+  payload: ManualCreateAppointmentPayload,
+) => {
+  return api.post("/appointments/manual-create-by-doctor/", payload);
+};

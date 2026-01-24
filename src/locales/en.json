@@ -181,7 +181,17 @@
     "no_appointments_found": "No appointments found",
     "status_pending": "Pending",
     "status_done": "Done",
-    "status_cancelled": "Cancelled"
+    "status_cancelled": "Cancelled",
+    "create_dialog": {
+      "title": "Create Appointment",
+      "description": "Enter patient details and select a working hour.",
+      "full_name": "Full Name",
+      "email": "Email",
+      "working_hour": "Working Hour",
+      "select_working_hour": "Select a working hour",
+      "cancel": "Cancel",
+      "create": "Create"
+    }
   },
   "schedules": {
     "select_all": "Select all",

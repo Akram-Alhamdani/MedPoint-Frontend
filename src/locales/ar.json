@@ -181,7 +181,19 @@
     "no_appointments_found": "لا توجد مواعيد",
     "status_pending": "قيد الانتظار",
     "status_done": "تم",
-    "status_cancelled": "ألغيت"
+    "status_cancelled": "ألغيت",
+    "create_dialog": {
+      "title": "إضافة موعد جديد",
+      "description": "أدخل بيانات المريض واختر ساعة العمل.",
+      "full_name": "الاسم الكامل",
+      "email": "البريد الإلكتروني",
+      "working_hour": "ساعة العمل",
+      "select_working_hour": "اختر ساعة العمل",
+      "cancel": "إلغاء",
+      "create": "إضافة",
+      "create_success": "تم إنشاء الموعد بنجاح",
+      "create_failed": "فشل في إنشاء الموعد. يرجى المحاولة مرة أخرى."
+    }
   },
   "schedules": {
     "select_all": "تحديد الكل",
