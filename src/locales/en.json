@@ -296,5 +296,24 @@
   "pagination": {
     "page": "Page {{page}} of {{total}}",
     "rows_per_page": "Rows per page"
+  },
+  "reviews": {
+    "comment_placeholder": "Write a comment...",
+    "send": "Send",
+    "sending": "Sending...",
+    "cancel": "Cancel",
+    "leave_reply": "Leave a reply",
+    "response_placeholder": "Write your response...",
+    "report_review": "Report review",
+    "report_patient": "Report patient",
+    "report_patient_description_review": "Describe the issue. You can file one report per patient per day.",
+    "report_patient_description_comment": "Describe the issue with this comment. You can file one report per patient per day.",
+    "report_reason_placeholder": "Reason for reporting",
+    "submit_report": "Submit report",
+    "submitting": "Submitting...",
+    "edit_comment": "Edit comment",
+    "update": "Update",
+    "cannot_report_self": "You cannot report your own comment",
+    "patient_id_missing": "Patient ID is missing"
   }
 }

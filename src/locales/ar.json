@@ -300,5 +300,24 @@
   "pagination": {
     "page": "الصفحة {{page}} من {{total}}",
     "rows_per_page": "عدد الصفوف في الصفحة"
+  },
+  "reviews": {
+    "comment_placeholder": "اكتب تعليقًا...",
+    "send": "إرسال",
+    "sending": "جاري الإرسال...",
+    "cancel": "إلغاء",
+    "leave_reply": "اترك ردًا",
+    "response_placeholder": "اكتب ردك...",
+    "report_review": "الإبلاغ عن المراجعة",
+    "report_patient": "الإبلاغ عن المريض",
+    "report_patient_description_review": "صف المشكلة. يمكنك تقديم بلاغ واحد لكل مريض يوميًا.",
+    "report_patient_description_comment": "صف المشكلة المتعلقة بهذا التعليق. يمكنك تقديم بلاغ واحد لكل مريض يوميًا.",
+    "report_reason_placeholder": "سبب الإبلاغ",
+    "submit_report": "تقديم البلاغ",
+    "submitting": "جاري التقديم...",
+    "edit_comment": "تعديل التعليق",
+    "update": "تحديث",
+    "cannot_report_self": "لا يمكنك الإبلاغ عن تعليقك",
+    "patient_id_missing": "معرّف المريض مفقود"
   }
 }

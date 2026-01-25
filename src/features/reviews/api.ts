@@ -13,6 +13,7 @@ export interface User {
 
 export interface Patient {
   user: User;
+  id?: number;
 }
 
 export interface ReviewComment {
@@ -36,6 +37,14 @@ export interface Review {
   updated_at: string;
 }
 
+export interface PatientReport {
+  id: number;
+  doctor: number;
+  patient: number;
+  reason: string;
+  created_at: string;
+}
+
 export interface ReviewsResponse {
   count: number;
   total_pages: number;
@@ -50,4 +59,32 @@ export const getReviews = async (page = 1, pageSize = 10) => {
   return api.get<ReviewsResponse>(
     `/reviews/?page=${page}&page_size=${pageSize}`,
   );
+};
+
+export const createReviewComment = async (
+  reviewId: number,
+  content: string,
+) => {
+  return api.post<ReviewComment>(`/reviews/${reviewId}/comments/`, {
+    content,
+  });
+};
+
+export const updateReviewComment = async (
+  commentId: number,
+  content: string,
+) => {
+  return api.patch<ReviewComment>(`/comments/${commentId}/`, {
+    content,
+  });
+};
+
+export const createPatientReport = async (
+  patient: number,
+  reason: string,
+) => {
+  return api.post<PatientReport>(`/patient-reports/`, {
+    patient,
+    reason,
+  });
 };
