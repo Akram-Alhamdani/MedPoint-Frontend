@@ -16,7 +16,8 @@
     "schedule": "الجدول",
     "working_hours": "ساعات العمل",
     "profile": "الملف الشخصي",
-    "logout": "تسجيل الخروج"
+    "logout": "تسجيل الخروج",
+    "reviews": "المراجعات"
   },
   "profile": {
     "failed_to_update_profile": "فشل في تحديث الملف الشخصي",

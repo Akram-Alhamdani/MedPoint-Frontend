@@ -16,7 +16,8 @@
     "schedule": "Schedule",
     "working_hours": "Working Hours",
     "profile": "Profile",
-    "logout": "Logout"
+    "logout": "Logout",
+    "reviews": "Reviews"
   },
   "profile": {
     "failed_to_update_profile": "Failed to update profile",

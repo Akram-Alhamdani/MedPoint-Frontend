@@ -13,6 +13,7 @@ import AppointmentsPage from "@/features/appointments/pages/AppointmentsPage";
 import SchedulesPage from "@/features/schedules/pages/SchedulesPage";
 import WorkingHoursPage from "@/features/working-hours/pages/WorkingHoursPage";
 import ProfilePage from "@/features/profile/pages/ProfilePage";
+import { ReviewPage } from "@/features/reviews";
 
 export const router = createBrowserRouter([
   {
@@ -45,6 +46,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <DashboardPage /> },
       { path: "appointments", element: <AppointmentsPage /> },
+      { path: "reviews", element: <ReviewPage /> },
       { path: "profile", element: <ProfilePage /> },
       { path: "schedule", element: <SchedulesPage /> },
       { path: "working-hours", element: <WorkingHoursPage /> },

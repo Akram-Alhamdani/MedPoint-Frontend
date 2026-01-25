@@ -1,10 +1,12 @@
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 import {
-  IconChartBar,
   IconDashboard,
   IconInnerShadowTop,
   IconListDetails,
+  IconStar,
+  IconCalendar,
+  IconClock,
 } from "@tabler/icons-react";
 
 import { NavMain } from "./nav-main";
@@ -34,12 +36,17 @@ function getSidebarNavItems(t: any) {
     {
       title: t("sidebar.schedule"),
       url: "/doctor/dashboard/schedule",
-      icon: IconChartBar,
+      icon: IconCalendar,
     },
     {
       title: t("sidebar.working_hours"),
       url: "/doctor/dashboard/working-hours",
-      icon: IconChartBar,
+      icon: IconClock,
+    },
+    {
+      title: t("sidebar.reviews"),
+      url: "/doctor/dashboard/reviews",
+      icon: IconStar,
     },
   ];
 }
