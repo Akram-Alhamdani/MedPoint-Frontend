@@ -209,7 +209,7 @@ export default function ProfilePage() {
   const { data: profile, isLoading } = useProfileData();
   const { data: specialties } = useSpecialtiesData();
   const updateProfile = useUpdateProfile();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const [formState, setFormState] = useState<EditableProfile>(emptyFormState);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
@@ -745,11 +745,23 @@ export default function ProfilePage() {
                       <SelectValue placeholder="Select specialty" />
                     </SelectTrigger>
                     <SelectContent>
-                      {specialtySelectOptions.map((option) => (
-                        <SelectItem key={option.id} value={String(option.id)}>
-                          {option.name}
-                        </SelectItem>
-                      ))}
+                      {i18n.language === "en"
+                        ? specialtySelectOptions.map((option) => (
+                            <SelectItem
+                              key={option.id}
+                              value={String(option.id)}
+                            >
+                              {option.name}
+                            </SelectItem>
+                          ))
+                        : specialtySelectOptions.map((option) => (
+                            <SelectItem
+                              key={option.id}
+                              value={String(option.id)}
+                            >
+                              {option.name_ar}
+                            </SelectItem>
+                          ))}
                     </SelectContent>
                   </Select>
                 </FieldContent>
