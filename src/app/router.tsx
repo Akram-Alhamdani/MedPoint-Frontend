@@ -14,6 +14,8 @@ import SchedulesPage from "@/features/schedules/pages/SchedulesPage";
 import WorkingHoursPage from "@/features/working-hours/pages/WorkingHoursPage";
 import ProfilePage from "@/features/profile/pages/ProfilePage";
 import { ReviewPage } from "@/features/reviews";
+import AppointmentDetailPage from "@/features/appointments/pages/AppointmentDetailPage";
+import SharedFoldersPage from "@/features/appointments/pages/SharedFoldersPage";
 
 export const router = createBrowserRouter([
   {
@@ -46,6 +48,8 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <DashboardPage /> },
       { path: "appointments", element: <AppointmentsPage /> },
+      { path: "appointments/:id", element: <AppointmentDetailPage /> },
+      { path: "shared-folders", element: <SharedFoldersPage /> },
       { path: "reviews", element: <ReviewPage /> },
       { path: "profile", element: <ProfilePage /> },
       { path: "schedule", element: <SchedulesPage /> },

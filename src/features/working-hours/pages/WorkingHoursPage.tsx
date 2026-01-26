@@ -5,6 +5,7 @@ import {
   useWorkingHoursCreate,
   useWorkingHoursDelete,
   useWorkingHoursUpdate,
+  useWorkingHoursCancel,
 } from "../hooks";
 import WorkingHoursTable from "../components/table/Table";
 import Pagination from "@/shared/components/Pagination";
@@ -40,10 +41,15 @@ const WorkingHoursPage = () => {
   const [pendingDeleteIds, setPendingDeleteIds] = useState<number[]>([]);
 
   // Schedule data fetching and mutations
-  const { data, isPending } = useWorkingHoursData(pageNumber, pageSize);
+  const { data, isPending, isFetching } = useWorkingHoursData(
+    pageNumber,
+    pageSize,
+  );
   const { mutate: deleteWorkingHours } = useWorkingHoursDelete();
   const { mutate: createWorkingHour } = useWorkingHoursCreate();
   const { mutate: updateWorkingHour } = useWorkingHoursUpdate();
+  const { mutate: cancelWorkingHour, isPending: isCancelPending } =
+    useWorkingHoursCancel();
 
   const handleEditRequest = (workingHour: WorkingHour) => {
     setEditId(workingHour.id);
@@ -62,49 +68,65 @@ const WorkingHoursPage = () => {
     setDeleteDialogOpen(true);
   };
 
-  return isPending ? (
-    <Spinner className="size-10 left-1/2 top-1/2 absolute -translate-x-1/2 -translate-y-1/2" />
-  ) : (
-    <div className="flex flex-1 flex-col gap-4 p-4 lg:p-6">
-      <WorkingHoursTable
-        data={data?.results ?? []}
-        onCreateClick={() => setCreateDialogOpen(true)}
-        onEditClick={handleEditRequest}
-        onDeleteRequest={handleDeleteRequest}
-      />
-      <Pagination
-        totalPages={data?.total_pages ?? 1}
-        pageSize={pageSize}
-        pageNumber={pageNumber}
-        onPageChange={setPageNumber}
-        onPageSizeChange={setPageSize}
-      />
+  const isInitialLoading = isPending && !data;
 
-      <CreateDialog
-        createDialogOpen={createDialogOpen}
-        setCreateDialogOpen={setCreateDialogOpen}
-        form={form}
-        setForm={setForm}
-        onWorkingHourCreate={createWorkingHour}
-      />
-      <UpdateDialog
-        editDialogOpen={editDialogOpen}
-        setEditDialogOpen={setEditDialogOpen}
-        editId={editId}
-        setEditId={setEditId}
-        form={form}
-        setForm={setForm}
-        onWorkingHourUpdate={(id, data) => updateWorkingHour({ id: id, data })}
-        baseStartDate={editStartDate}
-        baseEndDate={editEndDate}
-      />
-      <DeleteDialog
-        deleteDialogOpen={deleteDialogOpen}
-        setDeleteDialogOpen={setDeleteDialogOpen}
-        pendingDeleteIds={pendingDeleteIds}
-        setPendingDeleteIds={setPendingDeleteIds}
-        onWorkingHoursDelete={deleteWorkingHours}
-      />
+  return (
+    <div className="relative flex flex-1 flex-col gap-4 p-4 lg:p-6">
+      {isInitialLoading ? (
+        <Spinner className="size-10 left-1/2 top-1/2 absolute -translate-x-1/2 -translate-y-1/2" />
+      ) : (
+        <>
+          <WorkingHoursTable
+            data={data?.results ?? []}
+            onCreateClick={() => setCreateDialogOpen(true)}
+            onEditClick={handleEditRequest}
+            onDeleteRequest={handleDeleteRequest}
+            onCancelClick={(id) => cancelWorkingHour(id)}
+            isCancelPending={isCancelPending}
+          />
+          <Pagination
+            totalPages={data?.total_pages ?? 1}
+            pageSize={pageSize}
+            pageNumber={pageNumber}
+            onPageChange={setPageNumber}
+            onPageSizeChange={setPageSize}
+          />
+
+          <CreateDialog
+            createDialogOpen={createDialogOpen}
+            setCreateDialogOpen={setCreateDialogOpen}
+            form={form}
+            setForm={setForm}
+            onWorkingHourCreate={createWorkingHour}
+          />
+          <UpdateDialog
+            editDialogOpen={editDialogOpen}
+            setEditDialogOpen={setEditDialogOpen}
+            editId={editId}
+            setEditId={setEditId}
+            form={form}
+            setForm={setForm}
+            onWorkingHourUpdate={(id, data) =>
+              updateWorkingHour({ id: id, data })
+            }
+            baseStartDate={editStartDate}
+            baseEndDate={editEndDate}
+          />
+          <DeleteDialog
+            deleteDialogOpen={deleteDialogOpen}
+            setDeleteDialogOpen={setDeleteDialogOpen}
+            pendingDeleteIds={pendingDeleteIds}
+            setPendingDeleteIds={setPendingDeleteIds}
+            onWorkingHoursDelete={deleteWorkingHours}
+          />
+        </>
+      )}
+
+      {!isInitialLoading && isFetching ? (
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-background/50">
+          <Spinner className="size-8" />
+        </div>
+      ) : null}
     </div>
   );
 };

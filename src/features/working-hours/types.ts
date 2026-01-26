@@ -1,8 +1,11 @@
+export type WorkingHourStatus = "C" | "D" | "U";
+
 export interface WorkingHour {
   id: number | null;
   start_time: string;
   end_time: string;
   patient_left: number;
+  status?: WorkingHourStatus;
 }
 
 export type WorkingHourPayload = {

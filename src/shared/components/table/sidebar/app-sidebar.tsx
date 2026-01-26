@@ -7,6 +7,7 @@ import {
   IconStar,
   IconCalendar,
   IconClock,
+  IconFolders,
 } from "@tabler/icons-react";
 
 import { NavMain } from "./nav-main";
@@ -32,6 +33,11 @@ function getSidebarNavItems(t: any) {
       title: t("sidebar.appointments"),
       url: "/doctor/dashboard/appointments",
       icon: IconListDetails,
+    },
+    {
+      title: t("sidebar.shared_folders"),
+      url: "/doctor/dashboard/shared-folders",
+      icon: IconFolders,
     },
     {
       title: t("sidebar.schedule"),

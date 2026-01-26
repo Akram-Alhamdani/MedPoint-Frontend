@@ -2,6 +2,8 @@ import {
   IconCircleCheckFilled,
   IconCircleXFilled,
   IconLoader,
+  IconCurrencyDollar,
+  IconAlertTriangle,
 } from "@tabler/icons-react";
 import { Badge } from "@/shared/components/ui/badge";
 import { useTranslation } from "react-i18next";
@@ -9,28 +11,35 @@ import { useTranslation } from "react-i18next";
 export default function StatusBadge({ status }: { status: string }) {
   const { t } = useTranslation();
 
-  if (status === "PE") {
-    return (
-      <Badge variant="outline" className="px-1.5">
-        <IconLoader />
-        {t("appointments.status_pending", "Pending")}
-      </Badge>
-    );
-  }
+  const config: Record<string, { icon: JSX.Element; label: string }> = {
+    PE: {
+      icon: <IconLoader />,
+      label: t("appointments.status_pending", "Pending"),
+    },
+    PA: {
+      icon: <IconCurrencyDollar className="text-amber-500" />,
+      label: t("appointments.status_paid", "Paid"),
+    },
+    D: {
+      icon: <IconCircleCheckFilled className="fill-green-500" />,
+      label: t("appointments.status_done", "Done"),
+    },
+    M: {
+      icon: <IconAlertTriangle className="text-orange-500" />,
+      label: t("appointments.status_missed", "Missed"),
+    },
+    C: {
+      icon: <IconCircleXFilled className="fill-red-500" />,
+      label: t("appointments.status_cancelled", "Cancelled"),
+    },
+  };
 
-  if (status === "D") {
-    return (
-      <Badge variant="outline" className="px-1.5 ">
-        <IconCircleCheckFilled className="fill-green-500" />
-        {t("appointments.status_done", "Done")}
-      </Badge>
-    );
-  }
+  const current = config[status] ?? config["PE"];
 
   return (
-    <Badge variant="outline" className="px-1.5">
-      <IconCircleXFilled className="fill-red-500" />
-      {t("appointments.status_cancelled", "Cancelled")}
+    <Badge variant="outline" className="px-1.5 gap-1">
+      {current.icon}
+      {current.label}
     </Badge>
   );
 }

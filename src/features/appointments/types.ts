@@ -8,7 +8,52 @@ export interface Patient {
   user: PatientUser;
 }
 
-export type AppointmentStatus = "PE" | "C" | "D"; // PE=Pending, C=Canceled, D=Done
+export interface Folder {
+  id: number;
+  name: string;
+  description?: string | null;
+  appointment?: number;
+  doctor?: string;
+  patient?: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface SharedFolder {
+  id?: number;
+  folder: Folder;
+  sharing_type?: string;
+}
+
+export interface FolderFile {
+  id: number;
+  name: string;
+  file: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface FolderFilesResponse {
+  count: number;
+  total_pages: number;
+  current: number;
+  page_size: number;
+  previous: number;
+  next: number;
+  results: FolderFile[];
+}
+
+export interface SharedFoldersResponse {
+  count: number;
+  total_pages: number;
+  current: number;
+  page_size: number;
+  previous: number;
+  next: number;
+  results: SharedFolder[];
+}
+
+export type AppointmentStatus = "PE" | "PA" | "D" | "M" | "C"; // PE=Pending, PA=Paid, D=Done, M=Missed, C=Cancelled
 
 export interface Appointment {
   id: number;
@@ -16,6 +61,7 @@ export interface Appointment {
   status: AppointmentStatus;
   datetime: string; // ISO string
   fees: number;
+  shared_folders?: SharedFolder[];
 }
 export interface AppointmentResponse {
   count: number;

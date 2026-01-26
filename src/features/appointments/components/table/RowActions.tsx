@@ -1,7 +1,8 @@
 import { Button } from "@/shared/components/ui/button";
-import { Check, X } from "lucide-react";
+import { Check, Eye, X } from "lucide-react";
 import type { Appointment } from "../../types";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 type Props = {
   appointment: Appointment;
@@ -17,30 +18,44 @@ export default function RowActions({
   onCancel,
 }: Props) {
   const { t } = useTranslation();
-  if (appointment.status !== "PE") return null;
 
   return (
     <div className="flex gap-2">
       <Button
+        asChild
         size="icon"
-        variant="secondary"
-        disabled={disabled}
-        onClick={() => onComplete(appointment.id)}
-        title={t("appointments.complete")}
-        aria-label={t("appointments.complete")}
+        variant="ghost"
+        title={t("appointments.view_details", "View details")}
+        aria-label={t("appointments.view_details", "View details")}
       >
-        <Check />
+        <Link to={`/doctor/dashboard/appointments/${appointment.id}`}>
+          <Eye />
+        </Link>
       </Button>
-      <Button
-        size="icon"
-        variant="secondary"
-        disabled={disabled}
-        onClick={() => onCancel(appointment.id)}
-        title={t("appointments.cancel")}
-        aria-label={t("appointments.cancel")}
-      >
-        <X />
-      </Button>
+      {appointment.status === "PE" && (
+        <>
+          <Button
+            size="icon"
+            variant="secondary"
+            disabled={disabled}
+            onClick={() => onComplete(appointment.id)}
+            title={t("appointments.complete")}
+            aria-label={t("appointments.complete")}
+          >
+            <Check />
+          </Button>
+          <Button
+            size="icon"
+            variant="secondary"
+            disabled={disabled}
+            onClick={() => onCancel(appointment.id)}
+            title={t("appointments.cancel")}
+            aria-label={t("appointments.cancel")}
+          >
+            <X />
+          </Button>
+        </>
+      )}
     </div>
   );
 }

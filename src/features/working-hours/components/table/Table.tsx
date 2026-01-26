@@ -38,11 +38,15 @@ const WorkingHoursTable = ({
   onCreateClick,
   onEditClick,
   onDeleteRequest,
+  onCancelClick,
+  isCancelPending,
 }: {
   data: WorkingHour[];
   onCreateClick?: () => void;
   onEditClick?: (workingHour: WorkingHour) => void;
   onDeleteRequest?: (ids: number[]) => void;
+  onCancelClick?: (id: number) => void;
+  isCancelPending?: boolean;
 }) => {
   const { t, i18n } = useTranslation();
   const LTR = i18n.language === "en";
@@ -56,9 +60,18 @@ const WorkingHoursTable = ({
         disableRowActions,
         onEdit: (workingHour) => onEditClick?.(workingHour),
         onDelete: (id) => onDeleteRequest?.([id]),
+        onCancel: (id) => onCancelClick?.(id),
+        isCancelPending,
         t,
       }),
-    [disableRowActions, onDeleteRequest, onEditClick, t],
+    [
+      disableRowActions,
+      onDeleteRequest,
+      onEditClick,
+      onCancelClick,
+      isCancelPending,
+      t,
+    ],
   );
 
   const table: TableInstance<WorkingHour> = useReactTable({

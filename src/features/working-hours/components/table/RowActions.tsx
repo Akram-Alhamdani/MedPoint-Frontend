@@ -1,4 +1,4 @@
-import { IconEdit, IconTrash } from "@tabler/icons-react";
+import { IconEdit, IconTrash, IconBan } from "@tabler/icons-react";
 import { Button } from "@/shared/components/ui/button";
 import type { WorkingHour } from "../../types";
 
@@ -7,6 +7,8 @@ type RowActionsProps = {
   disableRowActions: boolean;
   onEdit: (workingHour: WorkingHour) => void;
   onDelete: (id: number) => void;
+  onCancel: (id: number) => void;
+  isCancelPending?: boolean;
 };
 
 function RowActions({
@@ -14,6 +16,8 @@ function RowActions({
   disableRowActions,
   onEdit,
   onDelete,
+  onCancel,
+  isCancelPending,
 }: RowActionsProps) {
   const isInvalidId = row.original.id == null;
 
@@ -28,6 +32,18 @@ function RowActions({
         onClick={() => onEdit(row.original)}
       >
         <IconEdit className="size-4" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="cursor-pointer text-amber-600 hover:text-amber-700"
+        aria-label="Cancel working hour"
+        disabled={disableRowActions || isInvalidId || isCancelPending}
+        onClick={() => {
+          if (row.original.id != null) onCancel(row.original.id);
+        }}
+      >
+        <IconBan className="size-4" />
       </Button>
       <Button
         variant="ghost"

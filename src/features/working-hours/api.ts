@@ -34,6 +34,10 @@ export const updateWorkingHour = async (
   await api.patch(`/working-hours/${id}/`, payload);
 };
 
+export const cancelWorkingHour = async (id: number) => {
+  await api.post(`/working-hours/${id}/cancel/`);
+};
+
 export const deleteWorkingHours = async (ids: number[]) => {
   await api.delete(`/working-hours/bulk-delete/`, { data: { ids } });
 };

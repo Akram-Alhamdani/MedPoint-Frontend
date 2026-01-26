@@ -22,7 +22,12 @@ export function useWorkingHoursData(pageNumber: number, pageSize: number) {
         throw error;
       }
     },
-    refetchInterval: 5 * 60 * 1000,
-    staleTime: 60 * 1000,
+    staleTime: 0,
+    gcTime: 0,
+    refetchOnMount: "always",
+    refetchOnReconnect: "always",
+    refetchOnWindowFocus: "always",
+    keepPreviousData: true,
+    placeholderData: (previousData) => previousData,
   });
 }
