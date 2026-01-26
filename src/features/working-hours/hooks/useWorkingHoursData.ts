@@ -27,7 +27,6 @@ export function useWorkingHoursData(pageNumber: number, pageSize: number) {
     refetchOnMount: "always",
     refetchOnReconnect: "always",
     refetchOnWindowFocus: "always",
-    keepPreviousData: true,
     placeholderData: (previousData) => previousData,
   });
 }

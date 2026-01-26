@@ -20,6 +20,6 @@ export const useFolderFiles = (folderId?: number, page = 1, pageSize = 10) => {
             }
         },
         staleTime: 5 * 60 * 1000,
-        keepPreviousData: true,
+        placeholderData: (previousData) => previousData,
     });
 };
