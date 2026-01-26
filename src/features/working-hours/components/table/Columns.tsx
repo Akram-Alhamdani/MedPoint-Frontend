@@ -1,6 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/shared/components/ui/checkbox";
 import type { WorkingHour } from "../../types";
+import type { TFunction } from "i18next";
 
 import { formatDateTime } from "../../utils/formatDateTime";
 import RowActions from "./RowActions";
@@ -21,7 +22,7 @@ const buildColumns = ({
   isCancelPending,
   t,
 }: BuildColumnsArgs & {
-  t: (key: string, defaultValue?: string) => string;
+  t: TFunction<"translation">;
 }): ColumnDef<WorkingHour>[] => [
   {
     id: "select",

@@ -11,21 +11,23 @@ export const useSharedFolders = (
     return useQuery<SharedFoldersResponse>({
         queryKey: ["shared-folders", sharingType, page, pageSize],
         queryFn: async () => {
-            const { data, status } = await getSharedFolders(
-                page,
-                pageSize,
-                sharingType,
-            );
-            if (status !== 200) {
-                throw new Error("Failed to fetch shared folders");
+            try {
+                const { data, status } = await getSharedFolders(
+                    page,
+                    pageSize,
+                    sharingType,
+                );
+                if (status !== 200) {
+                    throw new Error("Failed to fetch shared folders");
+                }
+                return data as SharedFoldersResponse;
+            } catch (error: any) {
+                const message = error?.message || "An unexpected error occurred";
+                toast.error(message);
+                throw error;
             }
-            return data as SharedFoldersResponse;
         },
         staleTime: 5 * 60 * 1000,
-        placeholderData: (previousData) => previousData,
-        onError: (error: any) => {
-            const message = error?.message || "An unexpected error occurred";
-            toast.error(message);
-        },
+        placeholderData: (previousData): SharedFoldersResponse | undefined => previousData,
     });
 };
