@@ -2,7 +2,6 @@ import * as React from "react";
 import { useTranslation } from "react-i18next";
 import {
   IconDashboard,
-  IconInnerShadowTop,
   IconListDetails,
   IconStar,
   IconCalendar,
@@ -94,7 +93,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               className="data-[slot=sidebar-menu-button]:p-1.5!"
             >
               <div>
-                <IconInnerShadowTop className="size-5!" />
+                <img src="/logo.png" alt="MedPoint Logo" className="w-6" />
                 <span className="text-base font-semibold">MedPoint</span>
               </div>
             </SidebarMenuButton>
