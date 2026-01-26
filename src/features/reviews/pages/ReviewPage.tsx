@@ -10,7 +10,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/shared/components/ui/dialog";
 import {
   Avatar,
@@ -35,14 +34,13 @@ import { toast } from "sonner";
 
 // --- Shared Components ---
 
-const getPatientIdFromReview = (review: Review): String | null => {
-  console.log("Review patient user ID:", review.patient?.user?.id);
-  console.log("Review patient user ID:", review.patient);
+const getPatientIdFromReview = (review: Review): number | null => {
+  const patientId = review.patient?.id;
+  if (typeof patientId === "number") return patientId;
 
-  if (review.patient?.user?.id) return String(review.patient.user.id);
-
-  const fallback = review.patient?.user?.id;
-  return fallback ? String(fallback) : null;
+  const userId = review.patient?.user?.id;
+  const parsedUserId = userId ? Number(userId) : NaN;
+  return Number.isFinite(parsedUserId) ? parsedUserId : null;
 };
 
 const getCurrentUserId = (): string | null => {
@@ -124,8 +122,6 @@ function CommentForm({
 
 export default function ReviewsPage() {
   const { data: reviews } = useReviews(1, 10);
-  const { t } = useTranslation();
-  console.log("Fetched reviews:", reviews);
   return (
     <div className="w-full min-h-screen p-6 bg-slate-50/50">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -155,7 +151,7 @@ function ReviewCard({ review }: { review: Review }) {
   console.log("Patient ID for review:", patientId);
   const handleSubmitReport = () => {
     console.log("Submitting report for patient ID:", patientId);
-    if (!patientId || Number.isNaN(patientId)) {
+    if (patientId == null || Number.isNaN(patientId)) {
       toast.error(t("reviews.patient_id_missing"));
       return;
     }
@@ -325,7 +321,7 @@ function ReplySection({
   };
 
   const handleSubmitReport = () => {
-    if (!patientId || Number.isNaN(patientId)) {
+    if (patientId == null || Number.isNaN(patientId)) {
       toast.error(t("reviews.patient_id_missing"));
       return;
     }

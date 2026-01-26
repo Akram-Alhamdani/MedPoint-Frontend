@@ -5,13 +5,14 @@ import {
   IconCurrencyDollar,
   IconAlertTriangle,
 } from "@tabler/icons-react";
+import type { ReactElement } from "react";
 import { Badge } from "@/shared/components/ui/badge";
 import { useTranslation } from "react-i18next";
 
 export default function StatusBadge({ status }: { status: string }) {
   const { t } = useTranslation();
 
-  const config: Record<string, { icon: JSX.Element; label: string }> = {
+  const config: Record<string, { icon: ReactElement; label: string }> = {
     PE: {
       icon: <IconLoader />,
       label: t("appointments.status_pending", "Pending"),

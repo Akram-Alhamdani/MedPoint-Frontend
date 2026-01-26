@@ -6,6 +6,7 @@ export interface Specialty {
   id: number;
   slug: string;
   name: string;
+  name_ar?: string;
   icon?: string;
 }
 

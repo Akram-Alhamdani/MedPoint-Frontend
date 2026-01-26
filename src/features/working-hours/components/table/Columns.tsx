@@ -21,7 +21,7 @@ const buildColumns = ({
   isCancelPending,
   t,
 }: BuildColumnsArgs & {
-  t: (key: string) => string;
+  t: (key: string, defaultValue?: string) => string;
 }): ColumnDef<WorkingHour>[] => [
   {
     id: "select",

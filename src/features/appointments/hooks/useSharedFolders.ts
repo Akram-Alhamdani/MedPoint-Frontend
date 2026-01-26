@@ -22,7 +22,7 @@ export const useSharedFolders = (
             return data as SharedFoldersResponse;
         },
         staleTime: 5 * 60 * 1000,
-        keepPreviousData: true,
+        placeholderData: (previousData) => previousData,
         onError: (error: any) => {
             const message = error?.message || "An unexpected error occurred";
             toast.error(message);

@@ -10,7 +10,7 @@ import { Button } from "@/shared/components/ui/button";
 import { Spinner } from "@/shared/components/ui/spinner";
 import { useSharedFolders, useFolderFiles } from "../hooks";
 import { formatDateTime } from "../utils";
-import type { SharedFolder } from "../types";
+import type { SharedFolder, FolderFile } from "../types";
 import AppointmentsTablePagination from "@/shared/components/Pagination";
 
 export default function SharedFoldersPage() {
@@ -113,7 +113,7 @@ export default function SharedFoldersPage() {
                         </div>
                       ) : (
                         <ul className="space-y-2">
-                          {files.map((file) => (
+                          {files.map((file: FolderFile) => (
                             <li
                               key={file.id}
                               className="flex items-center justify-between gap-3 text-sm"
