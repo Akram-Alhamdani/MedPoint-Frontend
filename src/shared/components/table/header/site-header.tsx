@@ -23,6 +23,8 @@ export function SiteHeader() {
       return t("header.settings");
     if (pathname.endsWith("/doctor/dashboard/working-hours"))
       return t("sidebar.working_hours");
+    if (pathname.endsWith("/doctor/dashboard/reviews"))
+      return t("sidebar.reviews");
     return t("sidebar.dashboard");
   }, [location.pathname, t]);
 

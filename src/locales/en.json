@@ -356,6 +356,8 @@
     "edit_comment": "Edit comment",
     "update": "Update",
     "cannot_report_self": "You cannot report your own comment",
-    "patient_id_missing": "Patient ID is missing"
+    "patient_id_missing": "Patient ID is missing",
+    "no_reviews": "No reviews yet",
+    "no_reviews_description": "When patients leave reviews, they will appear here."
   }
 }

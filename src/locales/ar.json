@@ -360,6 +360,8 @@
     "edit_comment": "تعديل التعليق",
     "update": "تحديث",
     "cannot_report_self": "لا يمكنك الإبلاغ عن تعليقك",
-    "patient_id_missing": "معرّف المريض مفقود"
+    "patient_id_missing": "معرّف المريض مفقود",
+    "no_reviews": "لا توجد مراجعات بعد",
+    "no_reviews_description": "عندما يترك المرضى مراجعات، ستظهر هنا."
   }
 }

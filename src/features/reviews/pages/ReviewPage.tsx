@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Pagination from "@/shared/components/Pagination";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { Button } from "@/shared/components/ui/button";
 import { Textarea } from "@/shared/components/ui/textarea";
@@ -31,6 +32,7 @@ import {
 } from "../hooks";
 import type { Review, ReviewComment } from "../api";
 import { toast } from "sonner";
+import { Spinner } from "@/shared/components/ui/spinner";
 
 // --- Shared Components ---
 
@@ -118,16 +120,53 @@ function CommentForm({
   );
 }
 
-// --- Main Page Components ---
+export default function ReviewPage() {
+  // --- Main Page Components ---
 
-export default function ReviewsPage() {
-  const { data: reviews } = useReviews(1, 10);
+  const { t } = useTranslation();
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const { data: reviews, isPending } = useReviews(page, pageSize);
+  const hasNoReviews =
+    !reviews || !reviews.results || reviews.results.length === 0;
+  const totalPages = reviews?.total_pages || 1;
+
+  if (isPending) {
+    return (
+      <Spinner className="absolute left-1/2 top-1/2 size-10 -translate-x-1/2 -translate-y-1/2" />
+    );
+  }
   return (
     <div className="w-full min-h-screen p-6 bg-slate-50/50">
       <div className="max-w-7xl mx-auto space-y-6">
-        {reviews?.results.map((review: Review) => (
-          <ReviewCard key={review.id} review={review} />
-        ))}
+        {hasNoReviews ? (
+          <div className="flex flex-col items-center justify-center py-24 text-slate-400">
+            <span className="text-xl font-semibold mt-6 mb-2 text-slate-500">
+              {t("reviews.no_reviews")}
+            </span>
+            <span className="text-base text-slate-400">
+              {t(
+                "reviews.no_reviews_description",
+                "There are currently no reviews to display. Once you receive reviews, they will appear here.",
+              )}
+            </span>
+          </div>
+        ) : (
+          <>
+            {reviews?.results.map((review: Review) => (
+              <ReviewCard key={review.id} review={review} />
+            ))}
+            <div className="flex justify-center pt-8">
+              <Pagination
+                pageNumber={page}
+                pageSize={pageSize}
+                totalPages={totalPages}
+                onPageChange={setPage}
+                onPageSizeChange={setPageSize}
+              />
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
