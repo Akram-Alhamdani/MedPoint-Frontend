@@ -10,7 +10,7 @@ export function useAppointmentsData(pageNumber: number, pageSize: number) {
       try {
         const { data, status } = await getAppointmentsData(
           pageNumber,
-          pageSize
+          pageSize,
         );
 
         if (status !== 200)
@@ -22,6 +22,9 @@ export function useAppointmentsData(pageNumber: number, pageSize: number) {
       }
     },
     refetchInterval: 5 * 60 * 1000,
-    staleTime: 60 * 1000,
+    staleTime: 0,
+    refetchOnMount: "always",
+    refetchOnReconnect: "always",
+    refetchOnWindowFocus: "always",
   });
 }

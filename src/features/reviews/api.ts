@@ -55,9 +55,24 @@ export interface ReviewsResponse {
   results: Review[];
 }
 
+const getDoctorIdFromStorage = (): number | null => {
+  const raw = localStorage.getItem("user");
+  if (!raw) return null;
+
+  try {
+    const parsed = JSON.parse(raw);
+    const doctorId = parsed?.id;
+    return doctorId;
+  } catch (error) {
+    console.error("Failed to parse doctor from localStorage", error);
+    return null;
+  }
+};
+
 export const getReviews = async (page = 1, pageSize = 10) => {
+  const doctorId = getDoctorIdFromStorage();
   return api.get<ReviewsResponse>(
-    `/reviews/?page=${page}&page_size=${pageSize}`,
+    `doctors/${doctorId}/reviews/?page=${page}&page_size=${pageSize}`,
   );
 };
 
@@ -79,10 +94,7 @@ export const updateReviewComment = async (
   });
 };
 
-export const createPatientReport = async (
-  patient: number,
-  reason: string,
-) => {
+export const createPatientReport = async (patient: number, reason: string) => {
   return api.post<PatientReport>(`/patient-reports/`, {
     patient,
     reason,

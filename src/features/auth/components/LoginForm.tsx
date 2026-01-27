@@ -44,6 +44,12 @@ export function LoginForm() {
       { email, password },
       {
         onSuccess: () => navigate("/doctor/dashboard"),
+        onError: (error: any) => {
+          // If error message matches the translation for detail error, redirect
+          if (error?.message === t("auth.login.unverified_email")) {
+            navigate("/doctor/verify-email", { state: { email } });
+          }
+        },
       },
     );
   };

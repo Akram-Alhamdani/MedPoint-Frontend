@@ -23,7 +23,9 @@ export const useLogin = () => {
 
         return { access, refresh, user };
       } catch (error: any) {
-        throw new Error(t("auth.login.invalid_credentials"));
+        if (error.response?.data?.detail) {
+          throw new Error(t("auth.login.no_active_account_found"));
+        } else throw new Error(t("auth.login.unverified_email"));
       }
     },
 

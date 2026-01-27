@@ -17,6 +17,8 @@ import { ReviewPage } from "@/features/reviews";
 import AppointmentDetailPage from "@/features/appointments/pages/AppointmentDetailPage";
 import SharedFoldersPage from "@/features/appointments/pages/SharedFoldersPage";
 
+import VerifyEmailPage from "@/features/auth/pages/VerifyEmailPage";
+
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -25,6 +27,10 @@ export const router = createBrowserRouter([
   {
     path: "/doctor/login",
     element: <LoginPage />,
+  },
+  {
+    path: "/doctor/verify-email",
+    element: <VerifyEmailPage />,
   },
   {
     path: "/doctor/signup",

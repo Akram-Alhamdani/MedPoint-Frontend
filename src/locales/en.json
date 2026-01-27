@@ -103,7 +103,9 @@
       "signup_link": "Sign up",
       "only_doctors": "Only doctors are allowed",
       "invalid_credentials": "Invalid email or password",
-      "success": "Logged in successfully"
+      "success": "Logged in successfully",
+      "unverified_email": "Email is not verified. Please verify your email.",
+      "no_active_account_found": "No active account found with the given credentials."
     },
     "forgot_password": {
       "title": "Forgot Password",

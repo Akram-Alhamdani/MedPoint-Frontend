@@ -18,5 +18,8 @@ export function useProfileData() {
       }
     },
     staleTime: 5 * 60 * 1000,
+    refetchOnMount: "always",
+    refetchOnReconnect: "always",
+    refetchOnWindowFocus: "always",
   });
 }
