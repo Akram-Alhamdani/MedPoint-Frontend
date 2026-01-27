@@ -94,6 +94,10 @@ export const updateReviewComment = async (
   });
 };
 
+export const deleteReviewComment = async (commentId: number) => {
+  return api.delete(`/comments/${commentId}/`);
+};
+
 export const createPatientReport = async (patient: number, reason: string) => {
   return api.post<PatientReport>(`/patient-reports/`, {
     patient,

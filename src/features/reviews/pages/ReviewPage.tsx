@@ -27,6 +27,7 @@ import { IconStar, IconDots, IconSend } from "@tabler/icons-react";
 import {
   useCreatePatientReport,
   useCreateReviewComment,
+  useDeleteReviewComment,
   useReviews,
   useUpdateReviewComment,
 } from "../hooks";
@@ -341,6 +342,8 @@ function ReplySection({
     useUpdateReviewComment();
   const { mutate: createReport, isPending: isReporting } =
     useCreatePatientReport();
+  const { mutate: deleteComment, isPending: isDeleting } =
+    useDeleteReviewComment();
   const [reportOpen, setReportOpen] = useState(false);
   const [reportReason, setReportReason] = useState("");
   const currentUserId = getCurrentUserId();
@@ -358,6 +361,8 @@ function ReplySection({
       },
     );
   };
+
+  const handleDeleteComment = () => deleteComment(comment.id);
 
   const handleSubmitReport = () => {
     if (patientId == null || Number.isNaN(patientId)) {
@@ -412,6 +417,14 @@ function ReplySection({
                 {canEdit && (
                   <DropdownMenuItem onClick={() => setIsEditing(true)}>
                     {t("reviews.edit_comment")}
+                  </DropdownMenuItem>
+                )}
+                {canEdit && (
+                  <DropdownMenuItem
+                    disabled={isDeleting}
+                    onClick={handleDeleteComment}
+                  >
+                    {t("reviews.delete_comment")}
                   </DropdownMenuItem>
                 )}
                 {canReport ? (

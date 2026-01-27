@@ -6,6 +6,8 @@ import {
   IconStar,
   IconStethoscope,
   IconUserCircle,
+  IconFileText,
+  IconDownload,
 } from "@tabler/icons-react";
 import {
   Item,
@@ -17,7 +19,16 @@ import {
 } from "@/shared/components/ui/item";
 import { ShieldAlertIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ChangeEvent,
+} from "react";
+import QRCode from "qrcode";
+import { jsPDF } from "jspdf";
 
 // Helper to resolve image URL
 function resolveImageUrl(image: string | null): string | null {
@@ -214,6 +225,10 @@ export default function ProfilePage() {
   const [formState, setFormState] = useState<EditableProfile>(emptyFormState);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [qrPreviewDataUrl, setQrPreviewDataUrl] = useState<string | null>(null);
+  const [isBuildingQrPreview, setIsBuildingQrPreview] = useState(false);
+  const [isGeneratingQrImage, setIsGeneratingQrImage] = useState(false);
+  const [isGeneratingQrPdf, setIsGeneratingQrPdf] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const { mutate: uploadDegree, isPending: isUploadingDegree } =
     useUploadDegreeFile();
@@ -243,6 +258,14 @@ export default function ProfilePage() {
   const statusInfo = profile ? statusMeta[profile.status] : undefined;
 
   const specialtyOptionsBase = Array.isArray(specialties) ? specialties : [];
+
+  const qrValue = useMemo(() => {
+    return profile?.id ? `medipoint:user:${profile.id}` : "";
+  }, [profile?.id]);
+
+  const qrFilenameBase = useMemo(() => {
+    return profile?.id ? `medipoint-user-${profile.id}` : "medipoint-user";
+  }, [profile?.id]);
 
   // Ensure gender is always set from profile if missing in formState
   useEffect(() => {
@@ -302,6 +325,104 @@ export default function ProfilePage() {
     );
     return match?.name ?? null;
   }, [profile?.specialty, currentSpecialtyId, specialtySelectOptions]);
+
+  const buildQrDataUrl = useCallback(async () => {
+    if (!qrValue) {
+      throw new Error("Missing profile id for QR code");
+    }
+
+    return QRCode.toDataURL(qrValue, {
+      margin: 1,
+      width: 420,
+      color: {
+        dark: "#000000",
+        light: "#ffffff",
+      },
+    });
+  }, [qrValue]);
+
+  useEffect(() => {
+    let isCancelled = false;
+
+    const buildPreview = async () => {
+      if (!qrValue) {
+        setQrPreviewDataUrl(null);
+        return;
+      }
+
+      setIsBuildingQrPreview(true);
+      try {
+        const dataUrl = await buildQrDataUrl();
+        if (!isCancelled) {
+          setQrPreviewDataUrl(dataUrl);
+        }
+      } catch (error) {
+        console.error(error);
+        if (!isCancelled) {
+          setQrPreviewDataUrl(null);
+        }
+      } finally {
+        if (!isCancelled) {
+          setIsBuildingQrPreview(false);
+        }
+      }
+    };
+
+    buildPreview();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [buildQrDataUrl, qrValue]);
+
+  const handleDownloadQrImage = useCallback(async () => {
+    setIsGeneratingQrImage(true);
+    try {
+      const dataUrl = await buildQrDataUrl();
+      const link = document.createElement("a");
+      link.href = dataUrl;
+      link.download = `${qrFilenameBase}.png`;
+      link.rel = "noopener";
+      link.click();
+    } catch (error) {
+      console.error(error);
+      toast.error(
+        t("profile.qr.download_image_error", "Unable to generate the QR image"),
+      );
+    } finally {
+      setIsGeneratingQrImage(false);
+    }
+  }, [buildQrDataUrl, qrFilenameBase, t]);
+
+  const handleDownloadQrPdf = useCallback(async () => {
+    setIsGeneratingQrPdf(true);
+    try {
+      const dataUrl = await buildQrDataUrl();
+      const pdf = new jsPDF();
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const qrSize = Math.min(160, pageWidth - 40);
+      const qrX = (pageWidth - qrSize) / 2;
+      const qrY = 30;
+
+      pdf.setFontSize(16);
+      pdf.text("Medipoint QR", pageWidth / 2, 18, { align: "center" });
+      pdf.addImage(dataUrl, "PNG", qrX, qrY, qrSize, qrSize);
+
+      pdf.setFontSize(10);
+      pdf.text(qrValue, pageWidth / 2, qrY + qrSize + 12, {
+        align: "center",
+      });
+
+      pdf.save(`${qrFilenameBase}.pdf`);
+    } catch (error) {
+      console.error(error);
+      toast.error(
+        t("profile.qr.download_pdf_error", "Unable to generate the QR PDF"),
+      );
+    } finally {
+      setIsGeneratingQrPdf(false);
+    }
+  }, [buildQrDataUrl, qrFilenameBase, qrValue, t]);
 
   const handleFieldChange = (key: keyof EditableProfile, value: string) => {
     setFormState((prev) => ({ ...prev, [key]: value }));
@@ -523,20 +644,21 @@ export default function ProfilePage() {
         </Item>
       )}
 
-      <Card className="shadow-sm ">
-        <CardContent className="flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
-          {/* Identity */}
-          <div className="flex items-center gap-4">
-            {/* Avatar */}
-            <div className="relative">
-              <Avatar className="h-16 w-16 rounded-full border">
+      <Card className="overflow-hidden border-none shadow-md ring-1 ring-black/5">
+        <CardContent className="flex flex-col gap-6 p-0 sm:flex-row sm:items-stretch sm:justify-between">
+          {/* Profile Identity Section */}
+          <div className="flex flex-1 items-start gap-5 p-6 sm:items-center">
+            {/* Avatar with Hover Effect */}
+            <div className="relative group shrink-0">
+              <Avatar className="h-20 w-20 rounded-2xl border-2 border-background shadow-sm transition-transform group-hover:scale-[1.02]">
                 <AvatarImage
                   src={
                     avatarPreview || resolveImageUrl(profile.image) || undefined
                   }
                   alt={profile.full_name}
+                  className="object-cover"
                 />
-                <AvatarFallback className="text-sm font-semibold">
+                <AvatarFallback className="bg-primary/5 text-xl font-bold text-primary">
                   {initialsFromName(profile.full_name)}
                 </AvatarFallback>
               </Avatar>
@@ -544,11 +666,10 @@ export default function ProfilePage() {
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="absolute -bottom-1 -right-1 rounded-full bg-background p-1 shadow"
+                className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg ring-2 ring-background transition-colors hover:bg-primary/90"
               >
-                <IconUpload className="size-3" />
+                <IconUpload className="size-3.5" />
               </button>
-
               <input
                 ref={fileInputRef}
                 type="file"
@@ -558,52 +679,107 @@ export default function ProfilePage() {
               />
             </div>
 
-            {/* Name + meta */}
-            <div className="space-y-1">
-              <div className="flex items-center gap-2 flex-wrap">
-                <h1 className="text-lg font-semibold leading-tight">
+            {/* Text Info */}
+            <div className="flex flex-col gap-1.5">
+              <div className="flex flex-wrap items-center gap-2">
+                <h1 className="text-xl font-bold tracking-tight text-foreground">
                   {profile.full_name}
                 </h1>
 
-                {/* Verification badge (always shown) */}
-                {profile.is_verified && (
-                  <Badge variant="outline" className={` border-blue-300 gap-1`}>
-                    <IconShieldCheck className="size-3 text-blue-300" />
-
-                    <span className={`text-blue-300`}>Verified</span>
-                  </Badge>
-                )}
-
-                {/* Status badge */}
-                {statusInfo && (
-                  <Badge variant={statusInfo.variant} className="gap-1">
-                    {statusInfo.label}
-                  </Badge>
-                )}
+                <div className="flex gap-1.5">
+                  {profile.is_verified && (
+                    <Badge
+                      variant="secondary"
+                      className="bg-blue-50 text-blue-600 border-blue-100 px-1.5 py-0"
+                    >
+                      <IconShieldCheck className="mr-1 size-3" />
+                      Verified
+                    </Badge>
+                  )}
+                  {statusInfo && (
+                    <Badge
+                      variant={statusInfo.variant}
+                      className="px-1.5 py-0 uppercase text-[10px] tracking-wider"
+                    >
+                      {statusInfo.label}
+                    </Badge>
+                  )}
+                </div>
               </div>
 
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm font-medium text-muted-foreground/80">
                 {specialtyLabel || "Specialty not set"}
               </p>
 
               {profile.rating > 0 ? (
-                <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                  <IconStar className="size-3 fill-yellow-500 text-yellow-500" />
-                  <span className="font-medium">
+                <div className="flex items-center gap-1.5">
+                  <div className="flex items-center text-yellow-500">
+                    {[...Array(5)].map((_, i) => (
+                      <IconStar
+                        key={i}
+                        className={`size-3.5 ${i < Math.floor(profile.rating) ? "fill-current" : "text-muted/30"}`}
+                      />
+                    ))}
+                  </div>
+                  <span className="text-sm font-bold">
                     {profile.rating.toFixed(1)}
                   </span>
-                  <span>/ 5.0</span>
                 </div>
               ) : (
-                <p className="text-xs text-muted-foreground">
+                <span className="text-xs italic text-muted-foreground">
                   {t("profile.rating_not_available")}
-                </p>
+                </span>
               )}
+            </div>
+          </div>
+
+          {/* QR & Actions - Light Grey Side Panel Effect */}
+          <div className="flex flex-col border-t bg-muted/30 p-6 sm:w-72 sm:border-l sm:border-t-0 sm:justify-center">
+            <div className="flex flex-row items-center gap-4 sm:flex-col sm:gap-3">
+              {/* QR Preview */}
+              <div className="shrink-0 rounded-xl bg-background p-2 shadow-sm ring-1 ring-border">
+                {isBuildingQrPreview ? (
+                  <Skeleton className="h-20 w-20 rounded-lg" />
+                ) : qrPreviewDataUrl ? (
+                  <img
+                    src={qrPreviewDataUrl}
+                    alt="QR"
+                    className="h-20 w-20 rounded object-contain transition-opacity hover:opacity-90"
+                  />
+                ) : (
+                  <div className="flex h-20 w-20 items-center justify-center text-center text-[10px] text-muted-foreground">
+                    No QR
+                  </div>
+                )}
+              </div>
+
+              {/* Buttons */}
+              <div className="flex flex-1 flex-col gap-2 sm:w-full">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleDownloadQrImage}
+                  disabled={isGeneratingQrImage || isGeneratingQrPdf}
+                  className="h-9 w-full justify-start bg-background shadow-sm"
+                >
+                  <IconDownload className="mr-2 size-3.5" />
+                  <span className="text-xs font-semibold">PNG</span>
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleDownloadQrPdf}
+                  disabled={isGeneratingQrImage || isGeneratingQrPdf}
+                  className="h-9 w-full justify-start bg-background shadow-sm"
+                >
+                  <IconFileText className="mr-2 size-3.5" />
+                  <span className="text-xs font-semibold">PDF</span>
+                </Button>
+              </div>
             </div>
           </div>
         </CardContent>
       </Card>
-
       <form onSubmit={handleSubmit} className="space-y-4">
         <Card>
           <CardHeader className="pb-2">
